@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aaron Deng — 独立开发者</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #050508;
+    color: #e4e4e7;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* Background effects */
+  .bg-glow {
+    position: fixed; pointer-events: none; z-index: 0;
+    width: 600px; height: 600px; border-radius: 50%;
+    filter: blur(180px); opacity: 0.08;
+  }
+  .bg-glow.g1 { top: -200px; left: -100px; background: #67e8f9; }
+  .bg-glow.g2 { bottom: -100px; right: -100px; background: #a78bfa; }
+  .bg-glow.g3 { top: 60%; left: 40%; background: #f472b6; opacity: 0.04; width: 400px; height: 400px; }
+
+  /* Navigation */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 14px 24px;
+    backdrop-filter: blur(16px) saturate(180%);
+    background: rgba(5,5,8,0.75);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  nav .inner {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  nav .logo {
+    font-weight: 800; font-size: 18px; color: #fff;
+    letter-spacing: 0.04em;
+    background: linear-gradient(135deg, #67e8f9, #a78bfa);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  nav .links { display: flex; gap: 32px; }
+  nav .links a { color: #a1a1aa; text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; }
+  nav .links a:hover { color: #fff; }
+
+  /* Section containers */
+  section { padding: 100px 24px; position: relative; z-index: 1; }
+  .container { max-width: 1200px; margin: 0 auto; }
+
+  /* Section headers */
+  .section-header { margin-bottom: 64px; }
+  .section-header .overline {
+    font-size: 12px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.12em; color: #67e8f9; margin-bottom: 12px;
+  }
+  .section-header h2 { font-size: 36px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 12px; }
+  .section-header .desc { color: #71717a; font-size: 16px; max-width: 480px; }
+
+  /* Hero */
+  #hero { padding-top: 180px; padding-bottom: 100px; min-height: 100dvh; display: flex; align-items: center; }
+  #hero .status {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 16px; border-radius: 100px;
+    background: rgba(74,222,128,0.08); color: #4ade80;
+    font-size: 13px; font-weight: 500; margin-bottom: 28px;
+    border: 1px solid rgba(74,222,128,0.15);
+  }
+  #hero .status .dot { width: 7px; height: 7px; border-radius: 50%; background: #4ade80; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.25} }
+
+  #hero h1 { font-size: clamp(44px, 7vw, 76px); font-weight: 800; line-height: 1.08; margin-bottom: 20px; letter-spacing: -0.03em; }
+  #hero h1 .accent {
+    background: linear-gradient(135deg, #67e8f9 0%, #a78bfa 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  #hero .intro { font-size: 19px; color: #a1a1aa; max-width: 560px; margin-bottom: 42px; line-height: 1.7; }
+
+  #hero .metrics { display: flex; gap: 48px; margin-bottom: 44px; }
+  #hero .metric { text-align: center; }
+  #hero .metric .num {
+    font-size: 40px; font-weight: 800; color: #fff;
+    letter-spacing: -0.02em;
+  }
+  #hero .metric .num span { color: #67e8f9; }
+  #hero .metric .label { font-size: 13px; color: #52525b; margin-top: 4px; font-weight: 500; }
+
+  #hero .cta-row { display: flex; gap: 14px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 26px; border-radius: 12px;
+    font-size: 14px; font-weight: 600; text-decoration: none;
+    transition: all 0.25s; cursor: pointer;
+  }
+  .btn-primary {
+    background: #fff; color: #0a0a0b;
+  }
+  .btn-primary:hover { background: #e4e4e7; transform: translateY(-1px); }
+  .btn-secondary {
+    background: rgba(255,255,255,0.06); color: #d4d4d8;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .btn-secondary:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
+
+  /* Divider between sections */
+  .section-divider {
+    height: 1px; background: linear-gradient(to right, transparent, rgba(255,255,255,0.06), transparent);
+    margin: 0 24px;
+  }
+
+  /* Projects */
+  .project-group { margin-bottom: 72px; }
+  .project-group:last-child { margin-bottom: 0; }
+  .project-group-label {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 32px;
+  }
+  .project-group-label .icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+  }
+  .project-group-label .icon.public { background: rgba(74,222,128,0.12); color: #4ade80; }
+  .project-group-label .icon.private { background: rgba(161,161,170,0.1); color: #a1a1aa; }
+  .project-group-label .label { font-size: 18px; font-weight: 700; }
+  .project-group-label .badge {
+    font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 100px;
+  }
+  .badge.open { background: rgba(74,222,128,0.1); color: #4ade80; border: 1px solid rgba(74,222,128,0.2); }
+  .badge.closed { background: rgba(161,161,170,0.08); color: #a1a1aa; border: 1px solid rgba(161,161,170,0.15); }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 20px;
+  }
+
+  .project-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 20px;
+    padding: 32px;
+    transition: all 0.35s ease;
+    display: flex; flex-direction: column;
+  }
+  .project-card:hover {
+    background: rgba(255,255,255,0.04);
+    border-color: rgba(255,255,255,0.14);
+    transform: translateY(-3px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+  .project-card .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .project-card .lang-icon {
+    width: 42px; height: 42px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 700;
+  }
+  .lang-icon.python { background: rgba(55,118,179,0.18); color: #5ba5e8; }
+  .lang-icon.shell { background: rgba(136,224,112,0.15); color: #88e070; }
+  .lang-icon.kotlin { background: rgba(160,121,244,0.18); color: #b794f4; }
+  .lang-icon.swift { background: rgba(245,93,62,0.18); color: #f58b6e; }
+  .lang-icon.miniapp { background: rgba(7,193,96,0.18); color: #07c160; }
+
+  .project-card .repo-badge {
+    font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 100px;
+    background: rgba(255,255,255,0.04); color: #71717a;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .project-card h3 { font-size: 20px; font-weight: 700; margin-bottom: 10px; letter-spacing: -0.01em; }
+  .project-card .desc { color: #a1a1aa; font-size: 14px; line-height: 1.7; margin-bottom: 20px; flex: 1; }
+
+  .project-card .features { margin-bottom: 20px; }
+  .project-card .features .ft {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 13px; color: #d4d4d8; margin-bottom: 8px; line-height: 1.5;
+  }
+  .project-card .features .ft::before {
+    content: ""; min-width: 6px; height: 6px; border-radius: 50%;
+    background: rgba(255,255,255,0.2); margin-top: 7px; flex-shrink: 0;
+  }
+
+  .project-card .tech-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
+  .project-card .tech-tag {
+    font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 6px;
+    background: rgba(255,255,255,0.04); color: #71717a;
+  }
+  .project-card .card-footer { display: flex; align-items: center; gap: 16px; margin-top: auto; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.04); }
+  .project-card .gh-link {
+    color: #67e8f9; text-decoration: none; font-size: 13px; font-weight: 600;
+    display: inline-flex; align-items: center; gap: 6px; transition: opacity 0.2s;
+  }
+  .project-card .gh-link:hover { opacity: 0.7; }
+
+  /* Tech Stack */
+  #stack .stack-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 24px; }
+  .stack-card {
+    background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 18px; padding: 32px;
+  }
+  .stack-card .stack-icon { font-size: 28px; margin-bottom: 16px; }
+  .stack-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 18px; }
+  .stack-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .stack-tag {
+    padding: 6px 14px; border-radius: 8px;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+    font-size: 13px; color: #d4d4d8; font-weight: 500;
+    transition: all 0.2s;
+  }
+  .stack-tag:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.16); }
+
+  /* About */
+  #about { background: rgba(255,255,255,0.01); }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+  .about-text p { color: #a1a1aa; font-size: 15px; line-height: 1.8; margin-bottom: 20px; }
+  .about-highlights { display: flex; flex-direction: column; gap: 12px; }
+  .highlight-row {
+    display: flex; align-items: center; gap: 16px;
+    padding: 18px 20px; border-radius: 12px;
+    background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);
+  }
+  .highlight-row .hl-icon { font-size: 22px; flex-shrink: 0; }
+  .highlight-row .hl-text strong { display: block; font-size: 14px; margin-bottom: 2px; }
+  .highlight-row .hl-text span { font-size: 13px; color: #71717a; }
+
+  /* Contact */
+  #contact { text-align: center; padding-bottom: 80px; }
+  #contact .contact-links { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-top: 48px; }
+  .contact-link {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 28px; border-radius: 14px;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+    color: #d4d4d8; text-decoration: none; font-size: 15px; font-weight: 500;
+    transition: all 0.25s;
+  }
+  .contact-link:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.18); color: #fff; transform: translateY(-1px); }
+
+  /* Footer */
+  footer {
+    text-align: center; padding: 32px; color: #3f3f46; font-size: 13px;
+    border-top: 1px solid rgba(255,255,255,0.03);
+  }
+
+  /* Animations */
+  .fade-in {
+    opacity: 0; transform: translateY(28px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    #hero { padding-top: 130px; min-height: auto; }
+    #hero .metrics { gap: 32px; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .about-grid { grid-template-columns: 1fr; }
+    .stack-grid { grid-template-columns: 1fr; }
+    nav .links { gap: 18px; font-size: 13px; }
+    section { padding: 64px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-glow g1"></div>
+<div class="bg-glow g2"></div>
+<div class="bg-glow g3"></div>
+
+<nav>
+  <div class="inner">
+    <div class="logo">AD</div>
+    <div class="links">
+      <a href="#projects">项目</a>
+      <a href="#stack">技术栈</a>
+      <a href="#about">关于</a>
+      <a href="#contact">联系</a>
+    </div>
+  </div>
+</nav>
+
+<section id="hero">
+  <div class="container">
+    <div class="status"><div class="dot"></div> 开放合作机会</div>
+    <h1>Hi，我是 <span class="accent">Aaron Deng</span></h1>
+    <p class="intro">
+      独立移动端开发者，深耕 Android、macOS 和微信小程序。相信好产品是打磨出来的 —— 从需求到代码，从交互到细节，每个项目都当自己的作品来对待。
+    </p>
+    <div class="metrics">
+      <div class="metric"><div class="num"><span>8</span>+</div><div class="label">项目经验</div></div>
+      <div class="metric"><div class="num"><span>4</span></div><div class="label">覆盖平台</div></div>
+      <div class="metric"><div class="num"><span>5</span></div><div class="label">开发语言</div></div>
+      <div class="metric"><div class="num"><span>3</span>年<span>+</span></div><div class="label">开发经验</div></div>
+    </div>
+    <div class="cta-row">
+      <a href="#projects" class="btn btn-primary">浏览作品</a>
+      <a href="https://github.com/Aaron8938" class="btn btn-secondary" target="_blank">GitHub</a>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<section id="projects">
+  <div class="container">
+    <div class="section-header">
+      <div class="overline">Projects</div>
+      <h2>项目作品</h2>
+      <p class="desc">从移动应用到工具脚本，每个项目解决一个具体问题。</p>
+    </div>
+
+    <!-- ===== 公开项目 ===== -->
+    <div class="project-group">
+      <div class="project-group-label">
+        <div class="icon public">&#9679;</div>
+        <div class="label">开源项目</div>
+        <span class="badge open">Open Source</span>
+      </div>
+      <div class="projects-grid">
+
+        <!-- Office-to-PDF -->
+        <div class="project-card fade-in">
+          <div class="card-top">
+            <div class="lang-icon python">Py</div>
+            <span class="repo-badge">Public</span>
+          </div>
+          <h3>Office-to-PDF</h3>
+          <p class="desc">
+            批量 Office 文档转 PDF 命令行工具。解决日常办公中大量 Word、Excel、PowerPoint 文件需要统一归档为 PDF 的痛点，自动化完成格式转换，无需手动逐个打开另存。
+          </p>
+          <div class="features">
+            <div class="ft">支持 .docx / .xlsx / .pptx 三种主流格式</div>
+            <div class="ft">批量处理整个目录，自动识别文件类型</div>
+            <div class="ft">保留原始排版，输出质量稳定</div>
+          </div>
+          <div class="tech-tags">
+            <span class="tech-tag">Python</span>
+            <span class="tech-tag">python-docx</span>
+            <span class="tech-tag">openpyxl</span>
+          </div>
+          <div class="card-footer">
+            <a href="https://github.com/Aaron8938/Office-to-PDF" class="gh-link" target="_blank">查看源码 →</a>
+          </div>
+        </div>
+
+        <!-- PDF-Auto-Scale-to-A4 -->
+        <div class="project-card fade-in">
+          <div class="card-top">
+            <div class="lang-icon python">Py</div>
+            <span class="repo-badge">Public</span>
+          </div>
+          <h3>PDF-Auto-Scale-to-A4</h3>
+          <p class="desc">
+            PDF 页面自动缩放到 A4 尺寸的批处理工具。针对非标准尺寸 PDF 打印变形问题，自动检测原始页面比例，等比缩放后居中放置在 A4 画布上，完美适配办公打印和电子归档。
+          </p>
+          <div class="features">
+            <div class="ft">智能等比缩放，不拉伸不变形</div>
+            <div class="ft">自动居中放置 + 白边填充</div>
+            <div class="ft">批量处理整个文件夹</div>
+          </div>
+          <div class="tech-tags">
+            <span class="tech-tag">Python</span>
+            <span class="tech-tag">PyPDF2</span>
+            <span class="tech-tag">reportlab</span>
+          </div>
+          <div class="card-footer">
+            <a href="https://github.com/Aaron8938/PDF-Auto-Scale-to-A4" class="gh-link" target="_blank">查看源码 →</a>
+          </div>
+        </div>
+
+        <!-- PDF-Signature -->
+        <div class="project-card fade-in">
+          <div class="card-top">
+            <div class="lang-icon python">Py</div>
+            <span class="repo-badge">Public</span>
+          </div>
+          <h3>PDF-Signature-Page-Processing</h3>
+          <p class="desc">
+            PDF 签名页提取与处理工具。自动识别合同/协议中的签名页面，支持分离、提取、归档等操作，大幅简化合同审核流程中的签名页管理工作。
+          </p>
+          <div class="features">
+            <div class="ft">自动识别签名特征区域</div>
+            <div class="ft">支持分离和合并两种输出模式</div>
+            <div class="ft">可配置签名页匹配规则</div>
+          </div>
+          <div class="tech-tags">
+            <span class="tech-tag">Python</span>
+            <span class="tech-tag">PyPDF2</span>
+            <span class="tech-tag">PDF 解析</span>
+          </div>
+          <div class="card-footer">
+            <a href="https://github.com/Aaron8938/PDF-Signature-Page-Processing" class="gh-link" target="_blank">查看源码 →</a>
+          </div>
+        </div>
+
+        <!-- MacDotClean -->
+        <div class="project-card fade-in">
+          <div class="card-top">
+            <div class="lang-icon shell">Sh</div>
+            <span class="repo-badge">Public</span>
+          </div>
+          <h3>MacDotClean</h3>
+          <p class="desc">
+            macOS 隐藏文件清理脚本。一键递归清理指定目录下所有 .DS_Store、._* 等系统自动生成的隐藏文件，保持项目目录和移动硬盘的整洁干净。
+          </p>
+          <div class="features">
+            <div class="ft">递归扫描，深度清理所有子目录</div>
+            <div class="ft">支持自定义清理规则</div>
+            <div class="ft">安全模式：预览 + 确认后执行</div>
+          </div>
+          <div class="tech-tags">
+            <span class="tech-tag">Shell</span>
+            <span class="tech-tag">Bash</span>
+            <span class="tech-tag">macOS</span>
+          </div>
+          <div class="card-footer">
+            <a href="https://github.com/Aaron8938/MacDotClean" class="gh-link" target="_blank">查看源码 →</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===== 私有项目 ===== -->
+    <div class="project-group">
+      <div class="project-group-label">
+        <div class="icon private">&#9679;</div>
+        <div class="label">主要作品</div>
+        <span class="badge closed">Private</span>
+      </div>
+      <div class="projects-grid">
+
+        <!-- AllureReels -->
+        <div class="project-card fade-in">
+          <div class="card-top">
+            <div class="lang-icon kotlin">Kt</div>
+            <span class="repo-badge">Private</span>
+          </div>
+          <h3>AllureReels</h3>
+          <p class="desc">
+            面向海外市场的 Android 短视频应用，产品定位对标 TikTok Reels。从播放器选型到交互手势，全链路自主开发。已发布 v1.0.0 正式版本，具备完整的产品闭环能力。
+          </p>
+          <div class="features">
+            <div class="ft">ExoPlayer 引擎驱动，支持自适应码率、无缝循环播放</div>
+            <div class="ft">4 标签页底部导航：首页推荐 / 发现 / 创作 / 个人中心</div>
+            <div class="ft">视频收藏与离线下载（本地缓存策略）</div>
+            <div class="ft">Material Design 3 设计语言，支持深色模式</div>
+          </div>
+          <div class="tech-tags">
+            <span class="tech-tag">Kotlin</span>
+            <span class="tech-tag">ExoPlayer</span>
+            <span class="tech-tag">ViewBinding</span>
+            <span class="tech-tag">Material 3</span>
+            <span class="tech-tag">MVVM</span>
+          </div>
+          <div class="card-footer">
+            <span style="color:#52525b;font-size:13px;">私有仓库 / 产品已发布</span>
+          </div>
+        </div>
+
+        <!-- Nudge -->
+        <div class="project-card fade-in">
+          <div class="card-top">
+            <div class="lang-icon swift">Sw</div>
+            <span class="repo-badge">Private</span>
+          </div>
+          <h3>Nudge</h3>
+          <p class="desc">
+            极致轻量的 macOS 菜单栏微习惯追踪应用。经历了从 iOS/macOS 双平台复杂版到纯 macOS 精简版的重大重构 —— 文件从 14 个减至 8 个，代码从 2100 行砍到 1088 行。设计哲学：不打扰，只提醒。
+          </p>
+          <div class="features">
+            <div class="ft">驻留菜单栏，零界面干扰，LSUIElement=true</div>
+            <div class="ft">Habit + ActivityLog 纯数据模型，无冗余字段</div>
+            <div class="ft">点击即记录，无弹窗无导航，操作路径最短</div>
+            <div class="ft">重构后仅 8 个文件 1088 行，极致克制</div>
+          </div>
+          <div class="tech-tags">
+            <span class="tech-tag">Swift</span>
+            <span class="tech-tag">SwiftUI</span>
+            <span class="tech-tag">macOS</span>
+            <span class="tech-tag">MenuBar</span>
+            <span class="tech-tag">Core Data</span>
+          </div>
+          <div class="card-footer">
+            <span style="color:#52525b;font-size:13px;">私有仓库 / macOS 专属</span>
+          </div>
+        </div>
+
+        <!-- SpeedLive -->
+        <div class="project-card fade-in">
+          <div class="card-top">
+            <div class="lang-icon kotlin">Kt</div>
+            <span class="repo-badge">Private</span>
+          </div>
+          <h3>SpeedLive</h3>
+          <p class="desc">
+            与 AllureReels 差异化定位的实时互动项目，探索短视频消费之外的实时连线场景。目前处于核心架构搭建阶段，关注低延迟推流和实时交互体验。
+          </p>
+          <div class="features">
+            <div class="ft">实时音视频传输管线搭建中</div>
+            <div class="ft">与 AllureReels 技术栈共享，模块化可复用</div>
+            <div class="ft">差异化产品方向：实时互动 vs 异步消费</div>
+          </div>
+          <div class="tech-tags">
+            <span class="tech-tag">Kotlin</span>
+            <span class="tech-tag">WebRTC</span>
+            <span class="tech-tag">Android</span>
+          </div>
+          <div class="card-footer">
+            <span style="color:#52525b;font-size:13px;">私有仓库 / 开发中</span>
+          </div>
+        </div>
+
+        <!-- AskMe -->
+        <div class="project-card fade-in">
+          <div class="card-top">
+            <div class="lang-icon miniapp">小</div>
+            <span class="repo-badge">Private</span>
+          </div>
+          <h3>AskMe · 答案之书</h3>
+          <p class="desc">
+            微信小程序版「答案之书」—— 用户输入问题，获得一句随机哲思式回答。基于 WeChat Skyline 新一代渲染引擎开发，追求极致的首屏加载和交互动画流畅度。
+          </p>
+          <div class="features">
+            <div class="ft">Skyline 渲染引擎，突破 WebView 性能瓶颈</div>
+            <div class="ft">拟物翻书动效，触感反馈增强代入感</div>
+            <div class="ft">内置百条精选哲思答案，支持自定义题库</div>
+            <div class="ft">手势驱动交互：翻页 / 摇一摇 / 长按提问</div>
+          </div>
+          <div class="tech-tags">
+            <span class="tech-tag">微信小程序</span>
+            <span class="tech-tag">Skyline</span>
+            <span class="tech-tag">WXML</span>
+            <span class="tech-tag">WXSS</span>
+          </div>
+          <div class="card-footer">
+            <span style="color:#52525b;font-size:13px;">私有仓库 / 开发中</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<section id="stack">
+  <div class="container">
+    <div class="section-header">
+      <div class="overline">Tech Stack</div>
+      <h2>技术栈</h2>
+      <p class="desc">这些年在实战中积累的技术，还在持续扩展边界。</p>
+    </div>
+    <div class="stack-grid">
+
+      <div class="stack-card fade-in">
+        <div class="stack-icon">&#128241;</div>
+        <h3>Android 开发</h3>
+        <div class="stack-tags">
+          <span class="stack-tag">Kotlin</span>
+          <span class="stack-tag">Java</span>
+          <span class="stack-tag">Android SDK</span>
+          <span class="stack-tag">ExoPlayer</span>
+          <span class="stack-tag">ViewBinding</span>
+          <span class="stack-tag">MVVM</span>
+          <span class="stack-tag">Material Design 3</span>
+          <span class="stack-tag">Android Studio</span>
+        </div>
+      </div>
+
+      <div class="stack-card fade-in">
+        <div class="stack-icon">&#127822;</div>
+        <h3>Apple 平台</h3>
+        <div class="stack-tags">
+          <span class="stack-tag">Swift</span>
+          <span class="stack-tag">SwiftUI</span>
+          <span class="stack-tag">macOS</span>
+          <span class="stack-tag">iOS</span>
+          <span class="stack-tag">Xcode</span>
+          <span class="stack-tag">Core Data</span>
+          <span class="stack-tag">MenuBar App</span>
+        </div>
+      </div>
+
+      <div class="stack-card fade-in">
+        <div class="stack-icon">&#128172;</div>
+        <h3>微信小程序</h3>
+        <div class="stack-tags">
+          <span class="stack-tag">微信小程序</span>
+          <span class="stack-tag">Skyline</span>
+          <span class="stack-tag">WXML</span>
+          <span class="stack-tag">WXSS</span>
+          <span class="stack-tag">WXS</span>
+          <span class="stack-tag">小程序 API</span>
+        </div>
+      </div>
+
+      <div class="stack-card fade-in">
+        <div class="stack-icon">&#128295;</div>
+        <h3>工具链与脚本</h3>
+        <div class="stack-tags">
+          <span class="stack-tag">Python</span>
+          <span class="stack-tag">Shell/Bash</span>
+          <span class="stack-tag">Git</span>
+          <span class="stack-tag">GitHub</span>
+          <span class="stack-tag">macOS</span>
+          <span class="stack-tag">自动化</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<section id="about">
+  <div class="container">
+    <div class="section-header">
+      <div class="overline">About</div>
+      <h2>关于我</h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>
+          我是 Aaron，一名独立移动端开发者，坐标苏州。从大学时期开始接触移动开发，到现在横跨 Android、macOS 和微信小程序三个生态。
+        </p>
+        <p>
+          我做产品的核心标准只有一个：<strong>实用性</strong>。一个功能再好，如果对用户没有实际价值，就不值得做。这也是为什么 Nudge 能从 2100 行重构到 1088 行 —— 砍掉所有不必要的东西，只留本质。
+        </p>
+        <p>
+          目前正在推进 AllureReels 的迭代优化、Nudge 的 macOS 体验打磨，以及 SpeedLive 和 AskMe 等新方向的探索。
+        </p>
+      </div>
+      <div class="about-highlights">
+        <div class="highlight-row">
+          <div class="hl-icon">&#128205;</div>
+          <div class="hl-text"><strong>所在地</strong><span>中国苏州</span></div>
+        </div>
+        <div class="highlight-row">
+          <div class="hl-icon">&#127891;</div>
+          <div class="hl-text"><strong>教育背景</strong><span>苏州大学</span></div>
+        </div>
+        <div class="highlight-row">
+          <div class="hl-icon">&#128187;</div>
+          <div class="hl-text"><strong>主力设备</strong><span>macOS · Android Studio · Xcode</span></div>
+        </div>
+        <div class="highlight-row">
+          <div class="hl-icon">&#127919;</div>
+          <div class="hl-text"><strong>产品理念</strong><span>实用至上，少即是多</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<section id="contact">
+  <div class="container">
+    <div class="section-header" style="text-align:center;">
+      <div class="overline">Contact</div>
+      <h2>联系我</h2>
+      <p class="desc" style="margin:0 auto;">对项目感兴趣？想合作？欢迎随时交流。</p>
+    </div>
+    <div class="contact-links">
+      <a href="https://github.com/Aaron8938" class="contact-link" target="_blank">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        GitHub
+      </a>
+      <a href="mailto:893861417@qq.com" class="contact-link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        Email
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  &copy; 2026 Aaron Deng. Built with care.
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Stagger animation delay for project cards
+  document.querySelectorAll('.projects-grid .fade-in').forEach((el, i) => {
+    el.style.transitionDelay = `${i * 0.06}s`;
+  });
+</script>
+
+</body>
+</html>
