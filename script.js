@@ -68,6 +68,68 @@ document.addEventListener("DOMContentLoaded", () => {
   // Init language
   setLang(currentLang);
 
+  // ─── Word Reveal ───
+  function initWordReveal() {
+    const title = document.getElementById("hero-title");
+    if (!title) return;
+    let wordIndex = 0;
+    function wrapTextNodes(node) {
+      [...node.childNodes].forEach(child => {
+        if (child.nodeType === Node.TEXT_NODE) {
+          const text = child.textContent;
+          if (!text.trim()) return;
+          const words = text.split(/(\s+)/);
+          const frag = document.createDocumentFragment();
+          words.forEach(part => {
+            if (part.trim()) {
+              const span = document.createElement('span');
+              span.className = 'reveal-word';
+              span.textContent = part;
+              span.style.animationDelay = (wordIndex++ * 0.12 + 0.2) + 's';
+              frag.appendChild(span);
+            } else if (part) {
+              frag.appendChild(document.createTextNode(part));
+            }
+          });
+          child.replaceWith(frag);
+        } else if (child.nodeType === Node.ELEMENT_NODE) {
+          wrapTextNodes(child);
+        }
+      });
+    }
+    wrapTextNodes(title);
+  }
+  setTimeout(initWordReveal, 100);
+
+  // ─── Card Tilt ───
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = ((y - centerY) / centerY) * -6;
+      const rotateY = ((x - centerX) / centerX) * 6;
+      card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-2px)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
+    });
+  });
+
+  // ─── Scroll Progress ───
+  const scrollProgress = document.getElementById('scroll-progress');
+  function updateScrollProgress() {
+    if (!scrollProgress) return;
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    scrollProgress.style.width = Math.min(progress, 100) + '%';
+  }
+  window.addEventListener('scroll', updateScrollProgress, { passive: true });
+  updateScrollProgress();
+
   // ─── Expand/Collapse ───
   document.querySelectorAll(".expand-toggle").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -174,6 +236,83 @@ document.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => { copyBtn.classList.remove("copied"); copyHint.classList.remove("visible"); }, 1800);
     }
   });
+
+  // ─── Particle Trail Cursor ───
+  const canvas = document.getElementById('cursor-canvas');
+  if (canvas && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    const ctx = canvas.getContext('2d');
+    let w, h, mouseX = -100, mouseY = -100, prevX = -100, prevY = -100;
+    const particles = [];
+    const MAX_PARTICLES = 80;
+    const isDark = () => document.documentElement.getAttribute('data-theme') === 'dark';
+
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    class Particle {
+      constructor(x, y, vx, vy) {
+        this.x = x; this.y = y;
+        this.vx = vx; this.vy = vy;
+        this.life = 1;
+        this.decay = 0.006 + Math.random() * 0.016;
+        this.size = 1.5 + Math.random() * 3.5;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.vx *= 0.98;
+        this.vy *= 0.98;
+        this.life -= this.decay;
+      }
+      draw() {
+        const alpha = this.life * 0.7;
+        const color = isDark() ? `rgba(200,200,210,${alpha})` : `rgba(80,80,90,${alpha})`;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size * this.life, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.fill();
+      }
+    }
+
+    document.addEventListener('mousemove', (e) => {
+      prevX = mouseX; prevY = mouseY;
+      mouseX = e.clientX; mouseY = e.clientY;
+      // Spawn particles along the movement
+      const dx = mouseX - prevX;
+      const dy = mouseY - prevY;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist > 1.5 && prevX > 0) {
+        const steps = Math.min(Math.floor(dist / 3), 8);
+        for (let i = 0; i < steps; i++) {
+          const t = i / steps;
+          const px = prevX + dx * t;
+          const py = prevY + dy * t;
+          particles.push(new Particle(px, py, (Math.random() - 0.5) * 4, (Math.random() - 0.5) * 4));
+        }
+      }
+    });
+
+    function animate() {
+      ctx.clearRect(0, 0, w, h);
+      // Update & draw particles
+      for (let i = particles.length - 1; i >= 0; i--) {
+        particles[i].update();
+        if (particles[i].life <= 0) {
+          particles.splice(i, 1);
+        } else {
+          particles[i].draw();
+        }
+      }
+      // Limit particles
+      while (particles.length > MAX_PARTICLES) particles.shift();
+      requestAnimationFrame(animate);
+    }
+    animate();
+  }
 
   // ─── Intersection Observer ───
   const observer = new IntersectionObserver((entries) => {

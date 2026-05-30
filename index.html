@@ -20,6 +20,8 @@
 </head>
 <body>
 
+<div class="scroll-progress" id="scroll-progress"></div>
+
 <nav class="nav" id="navbar">
   <div class="nav__inner">
     <div class="nav__logo">Aaron</div>
@@ -35,8 +37,9 @@
 </nav>
 
 <section class="section hero" id="hero">
+  <div class="hero__glow"></div>
   <div class="section__inner">
-    <h1 class="hero__title"><span data-en="Hi, I'm " data-zh="Hi，我是 ">Hi, I'm </span>Aaron</h1>
+    <h1 class="hero__title" id="hero-title"><span data-en="Hi, I'm " data-zh="Hi，我是 ">Hi, I'm </span>Aaron</h1>
     <p class="hero__intro" data-en="Indie mobile developer. Android, macOS, WeChat Mini Programs. 27 projects from apps to engineering tools. Practicality first." data-zh="独立移动端开发者，深耕 Android、macOS 和微信小程序。27 个项目，从应用到工程工具，实用至上。">Indie mobile developer. Android, macOS, WeChat Mini Programs. 27 projects from apps to engineering tools. Practicality first.</p>
     <div class="hero__metrics">
       <div class="hero__metric"><div class="hero__metric-num"><span data-count="27">0</span><span class="suffix">+</span></div><div class="hero__metric-label" data-en="Projects" data-zh="项目经验">Projects</div></div>
@@ -141,7 +144,7 @@
     <div class="project-group" data-collapse="true">
       <div class="project-group__header">
         <span class="project-group__label" data-en="Utilities" data-zh="Utilities">Utilities</span>
-        <span class="project-group__badge badge--tools">16</span>
+        <span class="project-group__badge badge--private">16</span>
       </div>
       <div class="project-grid">
 
@@ -450,5 +453,7 @@
 </footer>
 
 <script src="script.js"></script>
+
+<canvas class="cursor-canvas" id="cursor-canvas"></canvas>
 </body>
 </html>
