@@ -4,6 +4,41 @@
 
 document.addEventListener("DOMContentLoaded", () => {
 
+  // ─── Theme ───
+  const THEME_KEY = "aaron-theme";
+  const themeToggle = document.getElementById("theme-toggle");
+
+  function getTheme() {
+    const stored = localStorage.getItem(THEME_KEY);
+    if (stored === "dark" || stored === "light") return stored;
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+
+  function applyTheme(theme) {
+    document.documentElement.setAttribute("data-theme", theme);
+    if (themeToggle) themeToggle.textContent = theme === "dark" ? "🌙" : "☀️";
+  }
+
+  function setTheme(theme) {
+    localStorage.setItem(THEME_KEY, theme);
+    applyTheme(theme);
+  }
+
+  // Init theme
+  applyTheme(getTheme());
+
+  themeToggle.addEventListener("click", () => {
+    const current = document.documentElement.getAttribute("data-theme");
+    setTheme(current === "dark" ? "light" : "dark");
+  });
+
+  // Listen for system theme changes (only when no manual preference set)
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+    if (!localStorage.getItem(THEME_KEY)) {
+      applyTheme(getTheme());
+    }
+  });
+
   // ─── Language ───
   const LANG_KEY = "aaron-lang";
   let currentLang = localStorage.getItem(LANG_KEY) || "en";
