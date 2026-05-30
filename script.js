@@ -246,6 +246,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const MAX_PARTICLES = 80;
     const isDark = () => document.documentElement.getAttribute('data-theme') === 'dark';
 
+    // ─── Spotlight ───
+    const spotlight = document.getElementById('spotlight');
+    let sx = -300, sy = -300;
+
     function resize() {
       w = canvas.width = window.innerWidth;
       h = canvas.height = window.innerHeight;
@@ -281,6 +285,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener('mousemove', (e) => {
       prevX = mouseX; prevY = mouseY;
       mouseX = e.clientX; mouseY = e.clientY;
+      if (spotlight) spotlight.classList.add('visible');
       // Spawn particles along the movement
       const dx = mouseX - prevX;
       const dy = mouseY - prevY;
@@ -298,6 +303,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function animate() {
       ctx.clearRect(0, 0, w, h);
+      // Spotlight smooth follow
+      if (spotlight) {
+        sx += (mouseX - sx) * 0.03;
+        sy += (mouseY - sy) * 0.03;
+        spotlight.style.left = sx + 'px';
+        spotlight.style.top = sy + 'px';
+      }
       // Update & draw particles
       for (let i = particles.length - 1; i >= 0; i--) {
         particles[i].update();
@@ -313,6 +325,19 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     animate();
   }
+
+  // ─── Magnetic Nav ───
+  document.querySelectorAll('.nav__links a').forEach(link => {
+    link.addEventListener('mousemove', (e) => {
+      const rect = link.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      link.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px)`;
+    });
+    link.addEventListener('mouseleave', () => {
+      link.style.transform = '';
+    });
+  });
 
   // ─── Intersection Observer ───
   const observer = new IntersectionObserver((entries) => {
@@ -333,6 +358,21 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".section").forEach(s => observer.observe(s));
   document.querySelectorAll(".fade-up").forEach(el => {
     if (!el.closest(".section")) observer.observe(el);
+  });
+
+  // ─── Scroll Depth of Field ───
+  const depthObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.remove('depth-blur');
+        entry.target.classList.add('depth-clear');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: "0px 0px -60px 0px" });
+
+  document.querySelectorAll('.section:not(#hero), .footer').forEach(s => {
+    s.classList.add('depth-blur');
+    depthObserver.observe(s);
   });
 
 });
