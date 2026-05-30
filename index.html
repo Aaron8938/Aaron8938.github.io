@@ -1,943 +1,488 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aaron — 独立开发者</title>
-<meta name="description" content="独立移动端开发者，深耕 Android、macOS 和微信小程序。8+ 项目经验，实用至上，少即是多。">
+<title data-en="Aaron — Indie Developer" data-zh="Aaron — 独立开发者">Aaron — Indie Developer</title>
+<meta name="description" content="Indie mobile developer. Android, macOS, WeChat Mini Programs. 27 projects. Practicality first.">
 <meta name="author" content="Aaron">
-
-<!-- Open Graph -->
-<meta property="og:title" content="Aaron — 独立开发者">
-<meta property="og:description" content="独立移动端开发者，深耕 Android、macOS 和微信小程序。实用至上，少即是多。">
+<meta property="og:title" content="Aaron — Indie Developer">
+<meta property="og:description" content="Indie mobile developer. Android, macOS, WeChat Mini Programs.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://aaron8938.github.io">
 <meta property="og:site_name" content="Aaron">
-<meta property="og:locale" content="zh_CN">
-
-<!-- Twitter Card -->
+<meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Aaron — 独立开发者">
-<meta name="twitter:description" content="独立移动端开发者，深耕 Android、macOS 和微信小程序。">
-
-<!-- Favicon (inline SVG) -->
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23050508'/><rect width='32' height='32' rx='8' fill='none' stroke='%2367e8f9' stroke-width='1.5'/><text x='16' y='22' text-anchor='middle' font-family='system-ui,sans-serif' font-weight='800' font-size='16' fill='%2367e8f9'>AD</text></svg>">
-
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; scroll-padding-top: 80px; }
-  body {
-    font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
-    background: #050508;
-    color: #e4e4e7;
-    line-height: 1.7;
-    overflow-x: hidden;
-  }
-
-  /* ─── Subtle grid background ─── */
-  .bg-grid {
-    position: fixed; inset: 0; z-index: 0; pointer-events: none;
-    background-image:
-      linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
-    background-size: 56px 56px;
-    mask-image: radial-gradient(ellipse 70% 70% at 50% 30%, black 20%, transparent 70%);
-    -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 30%, black 20%, transparent 70%);
-  }
-
-  /* Glow blobs */
-  .bg-glow {
-    position: fixed; pointer-events: none; z-index: 0;
-    border-radius: 50%; filter: blur(160px);
-  }
-  .bg-glow.g1 { width: 640px; height: 640px; top: -15%; left: -10%; background: #67e8f9; opacity: 0.06; animation: drift1 18s ease-in-out infinite; }
-  .bg-glow.g2 { width: 520px; height: 520px; bottom: -12%; right: -8%; background: #a78bfa; opacity: 0.07; animation: drift2 22s ease-in-out infinite; }
-  .bg-glow.g3 { width: 360px; height: 360px; top: 55%; left: 45%; background: #f472b6; opacity: 0.03; animation: drift3 20s ease-in-out infinite; }
-
-  @keyframes drift1 { 0%,100%{transform:translate(0,0)} 33%{transform:translate(60px,-30px)} 66%{transform:translate(-20px,50px)} }
-  @keyframes drift2 { 0%,100%{transform:translate(0,0)} 33%{transform:translate(-50px,30px)} 66%{transform:translate(40px,-20px)} }
-  @keyframes drift3 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-30px,-40px)} }
-
-  /* ─── Navigation ─── */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    padding: 14px 24px;
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
-    background: rgba(5,5,8,0.75);
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-    transition: border-color 0.3s;
-  }
-  nav.scrolled { border-bottom-color: rgba(255,255,255,0.12); }
-  nav .inner {
-    max-width: 1200px; margin: 0 auto;
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  nav .logo {
-    font-weight: 800; font-size: 18px;
-    letter-spacing: 0.04em;
-    background: linear-gradient(135deg, #67e8f9, #a78bfa);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  nav .links { display: flex; gap: 32px; }
-  nav .links a {
-    color: #71717a; text-decoration: none; font-size: 14px; font-weight: 500;
-    transition: color 0.25s; position: relative;
-  }
-  nav .links a::after {
-    content: ""; position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%) scaleX(0);
-    width: 18px; height: 2px; border-radius: 2px;
-    background: linear-gradient(90deg, #67e8f9, #a78bfa);
-    transition: transform 0.25s ease;
-  }
-  nav .links a:hover { color: #d4d4d8; }
-  nav .links a.active { color: #fff; }
-  nav .links a.active::after { transform: translateX(-50%) scaleX(1); }
-
-  /* ─── Section layout ─── */
-  section { padding: 100px 24px; position: relative; z-index: 1; }
-  .container { max-width: 1200px; margin: 0 auto; }
-
-  .section-header { margin-bottom: 64px; }
-  .section-header .overline {
-    font-size: 12px; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.12em; color: #67e8f9; margin-bottom: 12px;
-  }
-  .section-header h2 { font-size: 36px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 12px; }
-  .section-header .desc { color: #71717a; font-size: 16px; max-width: 480px; }
-
-  /* ─── Hero ─── */
-  #hero { padding-top: 180px; padding-bottom: 100px; min-height: 100dvh; display: flex; align-items: center; }
-  #hero .status {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 6px 16px; border-radius: 100px;
-    background: rgba(74,222,128,0.08); color: #4ade80;
-    font-size: 13px; font-weight: 500; margin-bottom: 28px;
-    border: 1px solid rgba(74,222,128,0.15);
-    animation: statusIn 0.8s ease-out;
-  }
-  #hero .status .dot { width: 7px; height: 7px; border-radius: 50%; background: #4ade80; animation: pulse 2s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.25} }
-  @keyframes statusIn { from { opacity:0; transform:translateY(12px) } to { opacity:1; transform:translateY(0) } }
-
-  #hero h1 {
-    font-size: clamp(44px, 7vw, 76px); font-weight: 800;
-    line-height: 1.08; margin-bottom: 20px; letter-spacing: -0.03em;
-  }
-  #hero h1 .accent {
-    background: linear-gradient(135deg, #67e8f9 0%, #a78bfa 100%);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  #hero .intro { font-size: 19px; color: #a1a1aa; max-width: 560px; margin-bottom: 42px; line-height: 1.7; }
-
-  /* Hero metrics — counter animation */
-  #hero .metrics { display: flex; gap: 48px; margin-bottom: 44px; }
-  #hero .metric { text-align: center; }
-  #hero .metric .num {
-    font-size: 40px; font-weight: 800; color: #fff;
-    letter-spacing: -0.02em; transition: none;
-    font-variant-numeric: tabular-nums;
-  }
-  #hero .metric .num .grad { color: #67e8f9; }
-  #hero .metric .num .suffix { font-size: 22px; color: #a1a1aa; }
-  #hero .metric .label { font-size: 13px; color: #52525b; margin-top: 4px; font-weight: 500; }
-
-  #hero .cta-row { display: flex; gap: 14px; flex-wrap: wrap; }
-  .btn {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 12px 26px; border-radius: 12px;
-    font-size: 14px; font-weight: 600; text-decoration: none;
-    transition: all 0.25s; cursor: pointer; border: none;
-  }
-  .btn-primary { background: #fff; color: #0a0a0b; }
-  .btn-primary:hover { background: #e4e4e7; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(255,255,255,0.1); }
-  .btn-secondary { background: rgba(255,255,255,0.06); color: #d4d4d8; border: 1px solid rgba(255,255,255,0.1); }
-  .btn-secondary:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
-
-  /* ─── Section dividers ─── */
-  .section-divider {
-    height: 1px; background: linear-gradient(to right, transparent, rgba(255,255,255,0.06), transparent);
-    margin: 0 24px;
-  }
-
-  /* ─── Projects ─── */
-  .project-group { margin-bottom: 72px; }
-  .project-group:last-child { margin-bottom: 0; }
-  .project-group-label {
-    display: flex; align-items: center; gap: 12px; margin-bottom: 32px;
-  }
-  .project-group-label .icon {
-    width: 32px; height: 32px; border-radius: 8px;
-    display: flex; align-items: center; justify-content: center; font-size: 15px;
-  }
-  .project-group-label .icon.public { background: rgba(74,222,128,0.12); color: #4ade80; }
-  .project-group-label .icon.private { background: rgba(161,161,170,0.1); color: #a1a1aa; }
-  .project-group-label .label { font-size: 18px; font-weight: 700; }
-  .project-group-label .badge {
-    font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 100px;
-  }
-  .badge.open { background: rgba(74,222,128,0.1); color: #4ade80; border: 1px solid rgba(74,222,128,0.2); }
-  .badge.closed { background: rgba(161,161,170,0.08); color: #a1a1aa; border: 1px solid rgba(161,161,170,0.15); }
-
-  .projects-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-    gap: 20px;
-  }
-
-  /* Project card — enhanced hover */
-  .project-card {
-    position: relative;
-    background: rgba(255,255,255,0.02);
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 20px;
-    padding: 32px;
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    display: flex; flex-direction: column;
-    overflow: hidden;
-  }
-  /* Border glow pseudo-element */
-  .project-card::before {
-    content: ""; position: absolute; inset: -1px; border-radius: 20px; z-index: -1;
-    background: linear-gradient(135deg, rgba(103,232,249,0), rgba(167,139,250,0), rgba(244,114,182,0));
-    opacity: 0; transition: opacity 0.5s ease;
-  }
-  .project-card:hover::before {
-    opacity: 1;
-    background: linear-gradient(135deg, rgba(103,232,249,0.25), rgba(167,139,250,0.25), rgba(244,114,182,0.15));
-  }
-  .project-card:hover {
-    background: rgba(255,255,255,0.05);
-    border-color: rgba(255,255,255,0.18);
-    transform: translateY(-6px);
-    box-shadow: 0 24px 80px -20px rgba(103,232,249,0.08), 0 12px 36px -8px rgba(167,139,250,0.06);
-  }
-  .project-card:hover .card-top .lang-icon { transform: scale(1.08); }
-  .project-card .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
-  .project-card .lang-icon {
-    width: 42px; height: 42px; border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px; font-weight: 700;
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .lang-icon.python { background: rgba(55,118,179,0.18); color: #5ba5e8; }
-  .lang-icon.shell { background: rgba(136,224,112,0.15); color: #88e070; }
-  .lang-icon.kotlin { background: rgba(160,121,244,0.18); color: #b794f4; }
-  .lang-icon.swift { background: rgba(245,93,62,0.18); color: #f58b6e; }
-  .lang-icon.miniapp { background: rgba(7,193,96,0.18); color: #07c160; }
-
-  .project-card .repo-badge {
-    font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 100px;
-    background: rgba(255,255,255,0.04); color: #71717a;
-    border: 1px solid rgba(255,255,255,0.06);
-  }
-  .project-card h3 { font-size: 20px; font-weight: 700; margin-bottom: 10px; letter-spacing: -0.01em; }
-  .project-card .desc { color: #a1a1aa; font-size: 14px; line-height: 1.7; margin-bottom: 20px; flex: 1; }
-
-  .project-card .features { margin-bottom: 20px; }
-  .project-card .features .ft {
-    display: flex; align-items: flex-start; gap: 10px;
-    font-size: 13px; color: #d4d4d8; margin-bottom: 8px; line-height: 1.5;
-  }
-  .project-card .features .ft::before {
-    content: ""; min-width: 6px; height: 6px; border-radius: 50%;
-    background: rgba(255,255,255,0.2); margin-top: 7px; flex-shrink: 0;
-  }
-
-  .project-card .tech-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
-  .project-card .tech-tag {
-    font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 6px;
-    background: rgba(255,255,255,0.04); color: #71717a;
-  }
-  .project-card .card-footer { display: flex; align-items: center; gap: 16px; margin-top: auto; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.04); }
-  .project-card .gh-link {
-    color: #67e8f9; text-decoration: none; font-size: 13px; font-weight: 600;
-    display: inline-flex; align-items: center; gap: 6px;
-    transition: opacity 0.2s;
-    position: relative;
-  }
-  .project-card .gh-link:hover { opacity: 0.7; }
-  .project-card .gh-link::after {
-    content: "↗"; display: inline-block; font-size: 11px; margin-left: 2px;
-    transition: transform 0.2s;
-  }
-  .project-card .gh-link:hover::after { transform: translate(2px, -2px); }
-
-  /* ─── Tech Stack ─── */
-  #stack .stack-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 24px; }
-  .stack-card {
-    background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);
-    border-radius: 18px; padding: 32px;
-    transition: border-color 0.3s, transform 0.3s;
-  }
-  .stack-card:hover { border-color: rgba(255,255,255,0.12); transform: translateY(-2px); }
-  .stack-card .stack-icon { font-size: 28px; margin-bottom: 16px; }
-  .stack-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 18px; }
-  .stack-tags { display: flex; flex-wrap: wrap; gap: 8px; }
-  .stack-tag {
-    padding: 6px 14px; border-radius: 8px;
-    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
-    font-size: 13px; color: #d4d4d8; font-weight: 500;
-    transition: all 0.2s;
-  }
-  .stack-tag:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.16); }
-
-  /* ─── About ─── */
-  #about { background: rgba(255,255,255,0.01); }
-  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
-  .about-text p { color: #a1a1aa; font-size: 15px; line-height: 1.9; margin-bottom: 24px; }
-  .about-text p strong { color: #d4d4d8; }
-  .about-highlights { display: flex; flex-direction: column; gap: 12px; }
-  .highlight-row {
-    display: flex; align-items: center; gap: 16px;
-    padding: 18px 20px; border-radius: 12px;
-    background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);
-    transition: border-color 0.3s, background 0.3s;
-  }
-  .highlight-row:hover { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.1); }
-  .highlight-row .hl-icon { font-size: 22px; flex-shrink: 0; }
-  .highlight-row .hl-text strong { display: block; font-size: 14px; margin-bottom: 2px; }
-  .highlight-row .hl-text span { font-size: 13px; color: #71717a; }
-
-  /* ─── Contact ─── */
-  #contact { text-align: center; padding-bottom: 60px; }
-  #contact .contact-links { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-top: 48px; margin-bottom: 28px; }
-  .contact-link {
-    display: inline-flex; align-items: center; gap: 10px;
-    padding: 14px 28px; border-radius: 14px;
-    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
-    color: #d4d4d8; text-decoration: none; font-size: 15px; font-weight: 500;
-    transition: all 0.25s; cursor: pointer;
-  }
-  .contact-link:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.18); color: #fff; transform: translateY(-1px); }
-  .contact-link.copied { border-color: #4ade80; background: rgba(74,222,128,0.08); }
-  .contact-hint { color: #3f3f46; font-size: 12px; margin-top: 4px; opacity: 0; transition: opacity 0.3s; }
-  .contact-hint.visible { opacity: 1; }
-
-  /* ─── Back to top ─── */
-  .back-to-top {
-    position: fixed; bottom: 32px; right: 32px; z-index: 90;
-    width: 44px; height: 44px; border-radius: 14px;
-    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
-    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; opacity: 0; visibility: hidden;
-    transform: translateY(12px);
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    color: #a1a1aa;
-  }
-  .back-to-top.visible { opacity: 1; visibility: visible; transform: translateY(0); }
-  .back-to-top:hover {
-    background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2);
-    color: #fff; transform: translateY(-2px);
-  }
-
-  /* ─── Footer ─── */
-  footer {
-    position: relative; z-index: 1;
-    text-align: center; padding: 40px 24px 32px;
-    color: #52525b; font-size: 13px;
-    border-top: 1px solid rgba(255,255,255,0.03);
-  }
-  footer .footer-links { display: flex; justify-content: center; gap: 24px; margin-bottom: 16px; flex-wrap: wrap; }
-  footer .footer-links a {
-    color: #71717a; text-decoration: none; font-size: 13px; font-weight: 500;
-    transition: color 0.2s;
-  }
-  footer .footer-links a:hover { color: #d4d4d8; }
-  footer .footer-meta { display: flex; justify-content: center; gap: 8px; align-items: center; flex-wrap: wrap; }
-  footer .footer-meta span { color: #3f3f46; }
-  footer .footer-meta .sep { color: #27272a; }
-
-  /* ─── Scroll animations ─── */
-  .fade-in {
-    opacity: 0; transform: translateY(28px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
-  }
-  .fade-in.visible { opacity: 1; transform: translateY(0); }
-
-  /* ─── Responsive ─── */
-  @media (max-width: 768px) {
-    #hero { padding-top: 130px; min-height: auto; }
-    #hero .metrics { gap: 28px; }
-    #hero .metric .num { font-size: 32px; }
-    #hero .metric .num .suffix { font-size: 18px; }
-    .projects-grid { grid-template-columns: 1fr; }
-    .about-grid { grid-template-columns: 1fr; }
-    .stack-grid { grid-template-columns: 1fr; }
-    nav .links { gap: 18px; }
-    section { padding: 64px 16px; }
-    .back-to-top { bottom: 20px; right: 20px; width: 40px; height: 40px; border-radius: 12px; }
-    footer .footer-links { gap: 14px; }
-  }
-</style>
+<meta name="twitter:title" content="Aaron — Indie Developer">
+<meta name="twitter:description" content="Indie mobile developer. Android, macOS, WeChat Mini Programs.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%231d1d1f'/><text x='16' y='22' text-anchor='middle' font-family='system-ui,sans-serif' font-weight='700' font-size='15' fill='%23ffffff'>AD</text></svg>">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- Background layers -->
-<div class="bg-grid"></div>
-<div class="bg-glow g1"></div>
-<div class="bg-glow g2"></div>
-<div class="bg-glow g3"></div>
-
-<!-- Navigation -->
-<nav id="navbar">
-  <div class="inner">
-    <div class="logo">AD</div>
-    <div class="links">
-      <a href="#hero" data-section="hero">首页</a>
-      <a href="#projects" data-section="projects">项目</a>
-      <a href="#stack" data-section="stack">技术栈</a>
-      <a href="#about" data-section="about">关于</a>
-      <a href="#contact" data-section="contact">联系</a>
+<nav class="nav" id="navbar">
+  <div class="nav__inner">
+    <div class="nav__logo">Aaron</div>
+    <div class="nav__links">
+      <a href="#hero" data-en="Home" data-zh="首页">Home</a>
+      <a href="#projects" data-en="Projects" data-zh="项目">Projects</a>
+      <a href="#stack" data-en="Stack" data-zh="技术栈">Stack</a>
+      <a href="#about" data-en="About" data-zh="关于">About</a>
+      <button class="lang-switch" id="lang-switch">CN</button>
     </div>
   </div>
 </nav>
 
-<!-- Hero -->
-<section id="hero">
-  <div class="container">
-    <div class="status"><div class="dot"></div> 开放合作机会</div>
-    <h1>Hi，我是 <span class="accent">Aaron</span></h1>
-    <p class="intro">
-      独立移动端开发者，深耕 Android、macOS 和微信小程序。相信好产品是打磨出来的 —— 从需求到代码，从交互到细节，每个项目都当自己的作品来对待。
-    </p>
-    <div class="metrics">
-      <div class="metric">
-        <div class="num"><span class="grad" data-count="8">0</span><span class="suffix">+</span></div>
-        <div class="label">项目经验</div>
-      </div>
-      <div class="metric">
-        <div class="num"><span class="grad" data-count="4">0</span></div>
-        <div class="label">覆盖平台</div>
-      </div>
-      <div class="metric">
-        <div class="num"><span class="grad" data-count="5">0</span></div>
-        <div class="label">开发语言</div>
-      </div>
-      <div class="metric">
-        <div class="num"><span class="grad" data-count="3">0</span><span class="suffix">年+</span></div>
-        <div class="label">开发经验</div>
-      </div>
+<section class="section hero" id="hero">
+  <div class="section__inner">
+    <h1 class="hero__title"><span data-en="Hi, I'm " data-zh="Hi，我是 ">Hi, I'm </span>Aaron</h1>
+    <p class="hero__intro" data-en="Indie mobile developer. Android, macOS, WeChat Mini Programs. 27 projects from apps to engineering tools. Practicality first." data-zh="独立移动端开发者，深耕 Android、macOS 和微信小程序。27 个项目，从应用到工程工具，实用至上。">Indie mobile developer. Android, macOS, WeChat Mini Programs. 27 projects from apps to engineering tools. Practicality first.</p>
+    <div class="hero__metrics">
+      <div class="hero__metric"><div class="hero__metric-num"><span data-count="27">0</span><span class="suffix">+</span></div><div class="hero__metric-label" data-en="Projects" data-zh="项目经验">Projects</div></div>
+      <div class="hero__metric"><div class="hero__metric-num"><span data-count="5">0</span></div><div class="hero__metric-label" data-en="Platforms" data-zh="覆盖平台">Platforms</div></div>
+      <div class="hero__metric"><div class="hero__metric-num"><span data-count="6">0</span></div><div class="hero__metric-label" data-en="Languages" data-zh="开发语言">Languages</div></div>
+      <div class="hero__metric"><div class="hero__metric-num"><span data-count="3">0</span><span class="suffix">+</span></div><div class="hero__metric-label" data-en="Years exp." data-zh="开发经验">Years exp.</div></div>
     </div>
-    <div class="cta-row">
-      <a href="#projects" class="btn btn-primary">浏览作品</a>
-      <a href="https://github.com/Aaron8938" class="btn btn-secondary" target="_blank" rel="noopener">GitHub</a>
+    <div class="hero__cta">
+      <a href="#projects" class="btn btn--primary" data-en="View Projects" data-zh="浏览作品">View Projects</a>
+      <a href="https://github.com/Aaron8938" class="btn btn--outline" target="_blank" rel="noopener">GitHub</a>
     </div>
   </div>
 </section>
 
-<div class="section-divider"></div>
+<section class="section section--alt" id="projects">
+  <div class="section__inner">
+    <h2 class="section__title" data-en="Projects" data-zh="项目作品">Projects</h2>
+    <p class="section__subtitle" data-en="Organized by GitHub list categories. Covers mobile, desktop, and engineering tools." data-zh="按 GitHub 列表分类整理，覆盖移动端、桌面端、工程工具等领域。">Organized by GitHub list categories. Covers mobile, desktop, and engineering tools.</p>
 
-<!-- Projects -->
-<section id="projects">
-  <div class="container">
-    <div class="section-header">
-      <div class="overline">Projects</div>
-      <h2>项目作品</h2>
-      <p class="desc">从移动应用到工具脚本，每个项目解决一个具体问题。</p>
-    </div>
-
-    <!-- 公开项目 -->
-    <div class="project-group">
-      <div class="project-group-label">
-        <div class="icon public">&#9679;</div>
-        <div class="label">开源项目</div>
-        <span class="badge open">Open Source</span>
+    <!-- Xcode -->
+    <div class="project-group" data-collapse="true">
+      <div class="project-group__header">
+        <span class="project-group__label" data-en="🍎 Apps for macOS, iOS, watchOS" data-zh="🍎 Apps for macOS, iOS, watchOS">🍎 Apps for macOS, iOS, watchOS</span>
+        <span class="project-group__badge badge--private">7</span>
       </div>
-      <div class="projects-grid">
+      <div class="project-grid">
 
-        <!-- Office-to-PDF -->
-        <div class="project-card fade-in">
-          <div class="card-top">
-            <div class="lang-icon python">Py</div>
-            <span class="repo-badge">Public</span>
-          </div>
-          <h3>Office-to-PDF</h3>
-          <p class="desc">批量 Office 文档转 PDF 命令行工具。解决日常办公中大量 Word、Excel、PowerPoint 文件需要统一归档为 PDF 的痛点。</p>
-          <div class="features">
-            <div class="ft">支持 .docx / .xlsx / .pptx 三种主流格式</div>
-            <div class="ft">批量处理整个目录，自动识别文件类型</div>
-            <div class="ft">保留原始排版，输出质量稳定</div>
-          </div>
-          <div class="tech-tags">
-            <span class="tech-tag">Python</span>
-            <span class="tech-tag">python-docx</span>
-            <span class="tech-tag">openpyxl</span>
-          </div>
-          <div class="card-footer">
-            <a href="https://github.com/Aaron8938/Office-to-PDF" class="gh-link" target="_blank" rel="noopener">查看源码</a>
+        <div class="card fade-up">
+          <div class="card__thumb thumb--swift"><span class="card__thumb-icon">🎬</span></div>
+          <div class="card__body">
+            <div class="card__lang"><span class="card__lang-dot dot--sw"></span> Swift</div>
+            <h3 class="card__title">AllureReels</h3>
+            <p class="card__desc" data-en="iOS version of AllureReels, built with SwiftUI. Synced with Android version, sharing core product logic." data-zh="AllureReels 的 iOS 版本，SwiftUI 构建。与 Android 版同步迭代，共享核心产品逻辑。">iOS version of AllureReels, built with SwiftUI. Synced with Android version, sharing core product logic.</p>
+            <div class="card__tags"><span class="card__tag">Swift</span><span class="card__tag">SwiftUI</span><span class="card__tag">iOS</span></div>
+            <div class="card__footer"><span class="card__footer-note" data-en="Private repo" data-zh="私有仓库">Private repo</span></div>
           </div>
         </div>
 
-        <!-- PDF-Auto-Scale -->
-        <div class="project-card fade-in">
-          <div class="card-top">
-            <div class="lang-icon python">Py</div>
-            <span class="repo-badge">Public</span>
-          </div>
-          <h3>PDF-Auto-Scale-to-A4</h3>
-          <p class="desc">PDF 页面自动缩放到 A4 尺寸的批处理工具。自动检测原始页面比例，等比缩放后居中放置在 A4 画布上，完美适配打印和归档。</p>
-          <div class="features">
-            <div class="ft">智能等比缩放，不拉伸不变形</div>
-            <div class="ft">自动居中放置 + 白边填充</div>
-            <div class="ft">批量处理整个文件夹</div>
-          </div>
-          <div class="tech-tags">
-            <span class="tech-tag">Python</span>
-            <span class="tech-tag">PyPDF2</span>
-            <span class="tech-tag">reportlab</span>
-          </div>
-          <div class="card-footer">
-            <a href="https://github.com/Aaron8938/PDF-Auto-Scale-to-A4" class="gh-link" target="_blank" rel="noopener">查看源码</a>
+        <div class="card fade-up">
+          <div class="card__thumb thumb--music"><span class="card__thumb-icon">🎵</span></div>
+          <div class="card__body">
+            <div class="card__lang"><span class="card__lang-dot dot--sw"></span> Swift</div>
+            <h3 class="card__title">MusicGrabber</h3>
+            <p class="card__desc" data-en="macOS music downloader. Search and download high-quality music from NetEase Cloud Music." data-zh="macOS 音乐下载工具，支持从网易云音乐搜索和下载高品质音乐。">macOS music downloader. Search and download high-quality music from NetEase Cloud Music.</p>
+            <div class="card__tags"><span class="card__tag">Swift</span><span class="card__tag">macOS</span></div>
+            <div class="card__footer"><span class="card__footer-note" data-en="Private repo" data-zh="私有仓库">Private repo</span></div>
           </div>
         </div>
 
-        <!-- PDF-Signature -->
-        <div class="project-card fade-in">
-          <div class="card-top">
-            <div class="lang-icon python">Py</div>
-            <span class="repo-badge">Public</span>
-          </div>
-          <h3>PDF-Signature-Page-Processing</h3>
-          <p class="desc">PDF 签名页提取与处理工具。自动识别合同/协议中的签名页面，支持分离、提取、归档等操作，大幅简化合同审核流程。</p>
-          <div class="features">
-            <div class="ft">自动识别签名特征区域</div>
-            <div class="ft">支持分离和合并两种输出模式</div>
-            <div class="ft">可配置签名页匹配规则</div>
-          </div>
-          <div class="tech-tags">
-            <span class="tech-tag">Python</span>
-            <span class="tech-tag">PyPDF2</span>
-            <span class="tech-tag">PDF 解析</span>
-          </div>
-          <div class="card-footer">
-            <a href="https://github.com/Aaron8938/PDF-Signature-Page-Processing" class="gh-link" target="_blank" rel="noopener">查看源码</a>
+        <div class="card fade-up">
+          <div class="card__thumb thumb--music"><span class="card__thumb-icon">🏷️</span></div>
+          <div class="card__body">
+            <div class="card__lang"><span class="card__lang-dot dot--sw"></span> Swift</div>
+            <h3 class="card__title">MusicTagger</h3>
+            <p class="card__desc" data-en="macOS music tag editor. Automatic song recognition and batch renaming." data-zh="macOS 音乐标签编辑器，自动识别歌曲信息、批量重命名。">macOS music tag editor. Automatic song recognition and batch renaming.</p>
+            <div class="card__tags"><span class="card__tag">Swift</span><span class="card__tag">macOS</span></div>
+            <div class="card__footer"><span class="card__footer-note" data-en="Private repo" data-zh="私有仓库">Private repo</span></div>
           </div>
         </div>
 
-        <!-- MacDotClean -->
-        <div class="project-card fade-in">
-          <div class="card-top">
-            <div class="lang-icon shell">Sh</div>
-            <span class="repo-badge">Public</span>
+        <div class="card fade-up card--hidden">
+          <div class="card__thumb thumb--swift"><span class="card__thumb-icon">📌</span></div>
+          <div class="card__body">
+            <div class="card__lang"><span class="card__lang-dot dot--sw"></span> Swift</div>
+            <h3 class="card__title">Nudge</h3>
+            <p class="card__desc" data-en="Ultra-light macOS menu bar habit tracker. Refactored from 2100 lines down to 1088. Only the essentials." data-zh="极致轻量的 macOS 菜单栏微习惯追踪。2100 行重构到 1088 行，只留本质。">Ultra-light macOS menu bar habit tracker. Refactored from 2100 lines down to 1088. Only the essentials.</p>
+            <div class="card__tags"><span class="card__tag">Swift</span><span class="card__tag">SwiftUI</span><span class="card__tag">macOS</span><span class="card__tag">Core Data</span></div>
+            <div class="card__footer"><span class="card__footer-note" data-en="Private repo" data-zh="私有仓库">Private repo</span></div>
           </div>
-          <h3>MacDotClean</h3>
-          <p class="desc">macOS 隐藏文件清理脚本。一键递归清理指定目录下所有 .DS_Store、._* 等系统隐藏文件，保持项目目录整洁。</p>
-          <div class="features">
-            <div class="ft">递归扫描，深度清理所有子目录</div>
-            <div class="ft">支持自定义清理规则</div>
-            <div class="ft">安全模式：预览 + 确认后执行</div>
+        </div>
+
+        <div class="card fade-up card--hidden">
+          <div class="card__thumb thumb--devtool"><span class="card__thumb-icon">🔐</span></div>
+          <div class="card__body">
+            <div class="card__lang"><span class="card__lang-dot dot--sw"></span> Swift</div>
+            <h3 class="card__title">SignWatch</h3>
+            <p class="card__desc" data-en="macOS signing certificate monitor. Scan Xcode projects, auto-detect Provisioning Profile expiration." data-zh="macOS 签名有效期监控。扫描 Xcode 项目，自动检测 Provisioning Profile 过期时间。">macOS signing certificate monitor. Scan Xcode projects, auto-detect Provisioning Profile expiration.</p>
+            <div class="card__tags"><span class="card__tag">Swift</span><span class="card__tag">macOS</span></div>
+            <div class="card__footer"><span class="card__footer-note" data-en="Private repo" data-zh="私有仓库">Private repo</span></div>
           </div>
-          <div class="tech-tags">
-            <span class="tech-tag">Shell</span>
-            <span class="tech-tag">Bash</span>
-            <span class="tech-tag">macOS</span>
+        </div>
+
+        <div class="card fade-up card--hidden">
+          <div class="card__thumb thumb--swift"><span class="card__thumb-icon">📖</span></div>
+          <div class="card__body">
+            <div class="card__lang"><span class="card__lang-dot dot--sw"></span> Swift</div>
+            <h3 class="card__title">AskMe</h3>
+            <p class="card__desc" data-en="iOS/watchOS version of AskMe. Aligned with Mini Program features, supports Apple Watch quick answers." data-zh="AskMe 的 iOS/watchOS 版本。与小程序版功能对齐，支持 Apple Watch 随手获取答案。">iOS/watchOS version of AskMe. Aligned with Mini Program features, supports Apple Watch quick answers.</p>
+            <div class="card__tags"><span class="card__tag">Swift</span><span class="card__tag">iOS</span><span class="card__tag">watchOS</span></div>
+            <div class="card__footer"><span class="card__footer-note" data-en="Private repo" data-zh="私有仓库">Private repo</span></div>
           </div>
-          <div class="card-footer">
-            <a href="https://github.com/Aaron8938/MacDotClean" class="gh-link" target="_blank" rel="noopener">查看源码</a>
+        </div>
+
+        <div class="card fade-up card--hidden">
+          <div class="card__thumb thumb--swift"><span class="card__thumb-icon">📡</span></div>
+          <div class="card__body">
+            <div class="card__lang"><span class="card__lang-dot dot--sw"></span> Swift</div>
+            <h3 class="card__title">SpeedLive</h3>
+            <p class="card__desc" data-en="Real-time interaction project. Exploring live connection scenarios beyond async video consumption." data-zh="实时互动项目，探索短视频消费之外的实时连线场景。与 AllureReels 差异化定位。">Real-time interaction project. Exploring live connection scenarios beyond async video consumption.</p>
+            <div class="card__tags"><span class="card__tag">Swift</span><span class="card__tag">WebRTC</span></div>
+            <div class="card__footer"><span class="card__footer-note" data-en="Private repo · In development" data-zh="私有仓库 · 开发中">Private repo · In development</span></div>
           </div>
         </div>
 
       </div>
-    </div>
-
-    <!-- 私有项目 -->
-    <div class="project-group">
-      <div class="project-group-label">
-        <div class="icon private">&#9679;</div>
-        <div class="label">主要作品</div>
-        <span class="badge closed">Private</span>
-      </div>
-      <div class="projects-grid">
-
-        <!-- AllureReels -->
-        <div class="project-card fade-in">
-          <div class="card-top">
-            <div class="lang-icon kotlin">Kt</div>
-            <span class="repo-badge">Private</span>
-          </div>
-          <h3>AllureReels</h3>
-          <p class="desc">面向海外市场的 Android 短视频应用，对标 TikTok Reels。全链路自主开发，已发布 v1.0.0 正式版本，具备完整的产品闭环能力。</p>
-          <div class="features">
-            <div class="ft">ExoPlayer 引擎驱动，自适应码率、无缝循环播放</div>
-            <div class="ft">4 标签页底部导航：首页推荐 / 发现 / 创作 / 个人中心</div>
-            <div class="ft">视频收藏与离线下载</div>
-            <div class="ft">Material Design 3 设计语言，支持深色模式</div>
-          </div>
-          <div class="tech-tags">
-            <span class="tech-tag">Kotlin</span>
-            <span class="tech-tag">ExoPlayer</span>
-            <span class="tech-tag">ViewBinding</span>
-            <span class="tech-tag">Material 3</span>
-            <span class="tech-tag">MVVM</span>
-          </div>
-          <div class="card-footer">
-            <span style="color:#52525b;font-size:13px;">私有仓库 / 产品已发布</span>
-          </div>
-        </div>
-
-        <!-- Nudge -->
-        <div class="project-card fade-in">
-          <div class="card-top">
-            <div class="lang-icon swift">Sw</div>
-            <span class="repo-badge">Private</span>
-          </div>
-          <h3>Nudge</h3>
-          <p class="desc">极致轻量的 macOS 菜单栏微习惯追踪应用。经历重大重构 —— 文件从 14 个减至 8 个，代码从 2100 行砍到 1088 行。设计哲学：不打扰，只提醒。</p>
-          <div class="features">
-            <div class="ft">驻留菜单栏，零界面干扰，LSUIElement=true</div>
-            <div class="ft">Habit + ActivityLog 纯数据模型，无冗余字段</div>
-            <div class="ft">点击即记录，无弹窗无导航，操作路径最短</div>
-            <div class="ft">重构后仅 8 个文件 1088 行，极致克制</div>
-          </div>
-          <div class="tech-tags">
-            <span class="tech-tag">Swift</span>
-            <span class="tech-tag">SwiftUI</span>
-            <span class="tech-tag">macOS</span>
-            <span class="tech-tag">MenuBar</span>
-            <span class="tech-tag">Core Data</span>
-          </div>
-          <div class="card-footer">
-            <span style="color:#52525b;font-size:13px;">私有仓库 / macOS 专属</span>
-          </div>
-        </div>
-
-        <!-- SpeedLive -->
-        <div class="project-card fade-in">
-          <div class="card-top">
-            <div class="lang-icon kotlin">Kt</div>
-            <span class="repo-badge">Private</span>
-          </div>
-          <h3>SpeedLive</h3>
-          <p class="desc">与 AllureReels 差异化定位的实时互动项目，探索短视频消费之外的实时连线场景。目前处于核心架构搭建阶段。</p>
-          <div class="features">
-            <div class="ft">实时音视频传输管线搭建中</div>
-            <div class="ft">与 AllureReels 技术栈共享，模块化可复用</div>
-            <div class="ft">差异化方向：实时互动 vs 异步消费</div>
-          </div>
-          <div class="tech-tags">
-            <span class="tech-tag">Kotlin</span>
-            <span class="tech-tag">WebRTC</span>
-            <span class="tech-tag">Android</span>
-          </div>
-          <div class="card-footer">
-            <span style="color:#52525b;font-size:13px;">私有仓库 / 开发中</span>
-          </div>
-        </div>
-
-        <!-- AskMe -->
-        <div class="project-card fade-in">
-          <div class="card-top">
-            <div class="lang-icon miniapp">小</div>
-            <span class="repo-badge">Private</span>
-          </div>
-          <h3>AskMe · 答案之书</h3>
-          <p class="desc">微信小程序版「答案之书」—— 用户输入问题，获得一句随机哲思式回答。基于 Skyline 新一代渲染引擎开发，追求极致的首屏加载和动效流畅度。</p>
-          <div class="features">
-            <div class="ft">Skyline 渲染引擎，突破 WebView 性能瓶颈</div>
-            <div class="ft">拟物翻书动效，触感反馈增强代入感</div>
-            <div class="ft">内置百条精选哲思答案，支持自定义题库</div>
-            <div class="ft">手势驱动交互：翻页 / 摇一摇 / 长按提问</div>
-          </div>
-          <div class="tech-tags">
-            <span class="tech-tag">微信小程序</span>
-            <span class="tech-tag">Skyline</span>
-            <span class="tech-tag">WXML</span>
-            <span class="tech-tag">WXSS</span>
-          </div>
-          <div class="card-footer">
-            <span style="color:#52525b;font-size:13px;">私有仓库 / 开发中</span>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="section-divider"></div>
-
-<!-- Tech Stack -->
-<section id="stack">
-  <div class="container">
-    <div class="section-header">
-      <div class="overline">Tech Stack</div>
-      <h2>技术栈</h2>
-      <p class="desc">这些年在实战中积累的技术，还在持续扩展边界。</p>
-    </div>
-    <div class="stack-grid">
-
-      <div class="stack-card fade-in">
-        <div class="stack-icon">&#128241;</div>
-        <h3>Android 开发</h3>
-        <div class="stack-tags">
-          <span class="stack-tag">Kotlin</span>
-          <span class="stack-tag">Java</span>
-          <span class="stack-tag">Android SDK</span>
-          <span class="stack-tag">ExoPlayer</span>
-          <span class="stack-tag">ViewBinding</span>
-          <span class="stack-tag">MVVM</span>
-          <span class="stack-tag">Material Design 3</span>
-          <span class="stack-tag">Android Studio</span>
-        </div>
-      </div>
-
-      <div class="stack-card fade-in">
-        <div class="stack-icon">&#127822;</div>
-        <h3>Apple 平台</h3>
-        <div class="stack-tags">
-          <span class="stack-tag">Swift</span>
-          <span class="stack-tag">SwiftUI</span>
-          <span class="stack-tag">macOS</span>
-          <span class="stack-tag">iOS</span>
-          <span class="stack-tag">Xcode</span>
-          <span class="stack-tag">Core Data</span>
-          <span class="stack-tag">MenuBar App</span>
-        </div>
-      </div>
-
-      <div class="stack-card fade-in">
-        <div class="stack-icon">&#128172;</div>
-        <h3>微信小程序</h3>
-        <div class="stack-tags">
-          <span class="stack-tag">微信小程序</span>
-          <span class="stack-tag">Skyline</span>
-          <span class="stack-tag">WXML</span>
-          <span class="stack-tag">WXSS</span>
-          <span class="stack-tag">WXS</span>
-          <span class="stack-tag">小程序 API</span>
-        </div>
-      </div>
-
-      <div class="stack-card fade-in">
-        <div class="stack-icon">&#128295;</div>
-        <h3>工具链与脚本</h3>
-        <div class="stack-tags">
-          <span class="stack-tag">Python</span>
-          <span class="stack-tag">Shell/Bash</span>
-          <span class="stack-tag">Git</span>
-          <span class="stack-tag">GitHub</span>
-          <span class="stack-tag">macOS</span>
-          <span class="stack-tag">自动化</span>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<div class="section-divider"></div>
-
-<!-- About -->
-<section id="about">
-  <div class="container">
-    <div class="section-header">
-      <div class="overline">About</div>
-      <h2>关于我</h2>
-    </div>
-    <div class="about-grid">
-      <div class="about-text">
-        <p>
-          我是 Aaron，一名独立移动端开发者，坐标苏州。从大学时期开始接触移动开发，到现在横跨 <strong>Android、macOS 和微信小程序</strong>三个生态。
-        </p>
-        <p>
-          我做产品的核心标准只有一个：<strong>实用性</strong>。一个功能再好，如果对用户没有实际价值，就不值得做。这也是为什么 Nudge 能从 2100 行重构到 1088 行 —— 砍掉所有不必要的东西，只留本质。
-        </p>
-        <p>
-          目前正在推进 AllureReels 的迭代优化、Nudge 的 macOS 体验打磨，以及 SpeedLive 和 AskMe 等新方向的探索。
-        </p>
-      </div>
-      <div class="about-highlights">
-        <div class="highlight-row">
-          <div class="hl-icon">&#128205;</div>
-          <div class="hl-text"><strong>所在地</strong><span>中国苏州</span></div>
-        </div>
-        <div class="highlight-row">
-          <div class="hl-icon">&#127891;</div>
-          <div class="hl-text"><strong>教育背景</strong><span>苏州大学</span></div>
-        </div>
-        <div class="highlight-row">
-          <div class="hl-icon">&#128187;</div>
-          <div class="hl-text"><strong>主力设备</strong><span>macOS · Android Studio · Xcode</span></div>
-        </div>
-        <div class="highlight-row">
-          <div class="hl-icon">&#127919;</div>
-          <div class="hl-text"><strong>产品理念</strong><span>实用至上，少即是多</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="section-divider"></div>
-
-<!-- Contact -->
-<section id="contact">
-  <div class="container">
-    <div class="section-header" style="text-align:center;">
-      <div class="overline">Contact</div>
-      <h2>联系我</h2>
-      <p class="desc" style="margin:0 auto;">对项目感兴趣？想合作？欢迎随时交流。</p>
-    </div>
-    <div class="contact-links">
-      <a href="https://github.com/Aaron8938" class="contact-link" target="_blank" rel="noopener">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-        GitHub
-      </a>
-      <button class="contact-link" id="copy-email" title="点击复制邮箱">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-        893861417@qq.com
+      <button class="expand-toggle" data-expand-en="View all 7 projects" data-expand-zh="查看全部 7 个项目">
+        <span class="expand-toggle__label" data-en="View all 7 projects" data-zh="查看全部 7 个项目">View all 7 projects</span>
+        <span class="expand-toggle__arrow">▾</span>
       </button>
     </div>
-    <div class="contact-hint" id="copy-hint">已复制到剪贴板</div>
+
+    <!-- Utilities -->
+    <div class="project-group" data-collapse="true">
+      <div class="project-group__header">
+        <span class="project-group__label" data-en="🔧 Utilities" data-zh="🔧 Utilities">🔧 Utilities</span>
+        <span class="project-group__badge badge--tools">16</span>
+      </div>
+      <div class="project-grid">
+
+        <div class="card fade-up">
+          <div class="card__thumb thumb--python"><span class="card__thumb-icon">📍</span></div>
+          <div class="card__body">
+            <div class="card__lang"><span class="card__lang-dot dot--py"></span> Python</div>
+            <h3 class="card__title">Boundary-Point-Generator</h3>
+            <p class="card__desc" data-en="Automated boundary point generation for cadastral surveying." data-zh="地籍测绘边界点自动生成工具。">Automated boundary point generation for cadastral surveying.</p>
+            <div class="card__tags"><span class="card__tag">Python</span><span class="card__tag">GIS</span></div>
+            <div class="card__footer"><span class="card__footer-note" data-en="Private repo" data-zh="私有仓库">Private repo</span></div>
+          </div>
+        </div>
+
+        <div class="card fade-up">
+          <div class="card__thumb thumb--python"><span class="card__thumb-icon">🗺️</span></div>
+          <div class="card__body">
+            <div class="card__lang"><span class="card__lang-dot dot--py"></span> Python</div>
+            <h3 class="card__title">Cadastral-Survey-Mapping</h3>
+            <p class="card__desc" data-en="Cadastral survey data processing and mapping automation." data-zh="地籍调查数据处理与制图自动化工具。">Cadastral survey data processing and mapping automation.</p>
+            <div class="card__tags"><span class="card__tag">Python</span><span class="card__tag">GIS</span></div>
+            <div class="card__footer"><span class="card__footer-note" data-en="Private repo" data-zh="私有仓库">Private repo</span></div>
+          </div>
+        </div>
+
+        <div class="card fade-up">
+          <div class="card__thumb thumb--python"><span class="card__thumb-icon">🌲</span></div>
+          <div class="card__body">
+            <div class="card__lang"><span class="card__lang-dot dot--py"></span> Python</div>
+            <h3 class="card__title">Forest-Analysis</h3>
+            <p class="card__desc" data-en="Forest resource survey data analysis and statistics." data-zh="森林资源调查数据分析与统计工具。">Forest resource survey data analysis and statistics.</p>
+            <div class="card__tags"><span class="card__tag">Python</span><span class="card__tag">GIS</span></div>
+            <div class="card__footer"><span class="card__footer-note" data-en="Private repo" data-zh="私有仓库">Private repo</span></div>
+          </div>
+        </div>
+
+        <div class="card fade-up card--hidden">
+          <div class="card__thumb thumb--python"><span class="card__thumb-icon">🔄</span></div>
+          <div class="card__body">
+            <div class="card__lang"><span class="card__lang-dot dot--py"></span> Python</div>
+            <h3 class="card__title">Land-Type-Rever</h3>
+            <p class="card__desc" data-en="Land type reversion and classification tool." data-zh="土地类型还原与分类工具。">Land type reversion and classification tool.</p>
+            <div class="card__tags"><span class="card__tag">Python</span><span class="card__tag">GIS</span></div>
+            <div class="card__footer"><span class="card__footer-note" data-en="Private repo" data-zh="私有仓库">Private repo</span></div>
+          </div>
+        </div>
+
+        <div class="card fade-up card--hidden">
+          <div class="card__thumb thumb--python"><span class="card__thumb-icon">📄</span></div>
+          <div class="card__body">
+            <div class="card__lang"><span class="card__lang-dot dot--py"></span> Python</div>
+            <h3 class="card__title">Office-to-PDF</h3>
+            <p class="card__desc" data-en="Batch Office to PDF converter. Supports .docx, .xlsx, .pptx." data-zh="批量 Office 转 PDF。">Batch Office to PDF converter. Supports .docx, .xlsx, .pptx.</p>
+            <div class="card__tags"><span class="card__tag">Python</span><span class="card__tag">Open Source</span></div>
+            <div class="card__footer"><a href="https://github.com/Aaron8938/Office-to-PDF" target="_blank" rel="noopener">Source</a></div>
+          </div>
+        </div>
+
+        <div class="card fade-up card--hidden">
+          <div class="card__thumb thumb--python"><span class="card__thumb-icon">📐</span></div>
+          <div class="card__body">
+            <div class="card__lang"><span class="card__lang-dot dot--py"></span> Python</div>
+            <h3 class="card__title">PDF-Auto-Scale-to-A4</h3>
+            <p class="card__desc" data-en="Smart PDF page scaling to A4. Proportional, centered, print-ready." data-zh="PDF 智能缩放到 A4，完美打印。">Smart PDF page scaling to A4. Proportional, centered, print-ready.</p>
+            <div class="card__tags"><span class="card__tag">Python</span><span class="card__tag">Open Source</span></div>
+            <div class="card__footer"><a href="https://github.com/Aaron8938/PDF-Auto-Scale-to-A4" target="_blank" rel="noopener">Source</a></div>
+          </div>
+        </div>
+
+        <div class="card fade-up card--hidden">
+          <div class="card__thumb thumb--python"><span class="card__thumb-icon">✍️</span></div>
+          <div class="card__body">
+            <div class="card__lang"><span class="card__lang-dot dot--py"></span> Python</div>
+            <h3 class="card__title">PDF-Signature-Page-Processing</h3>
+            <p class="card__desc" data-en="PDF signature page extraction. Auto-detect, split, and archive." data-zh="PDF 签名页提取处理。">PDF signature page extraction. Auto-detect, split, and archive.</p>
+            <div class="card__tags"><span class="card__tag">Python</span><span class="card__tag">Open Source</span></div>
+            <div class="card__footer"><a href="https://github.com/Aaron8938/PDF-Signature-Page-Processing" target="_blank" rel="noopener">Source</a></div>
+          </div>
+        </div>
+
+        <div class="card fade-up card--hidden">
+          <div class="card__thumb thumb--python"><span class="card__thumb-icon">⛏️</span></div>
+          <div class="card__body">
+            <div class="card__lang"><span class="card__lang-dot dot--py"></span> Python</div>
+            <h3 class="card__title">Topsoil-Removal-Analysis</h3>
+            <p class="card__desc" data-en="Topsoil removal volume calculation and analysis." data-zh="表土剥离土方量计算与分析工具。">Topsoil removal volume calculation and analysis.</p>
+            <div class="card__tags"><span class="card__tag">Python</span><span class="card__tag">GIS</span></div>
+            <div class="card__footer"><span class="card__footer-note" data-en="Private repo" data-zh="私有仓库">Private repo</span></div>
+          </div>
+        </div>
+
+        <div class="card fade-up card--hidden">
+          <div class="card__thumb thumb--python"><span class="card__thumb-icon">🔄</span></div>
+          <div class="card__body">
+            <div class="card__lang"><span class="card__lang-dot dot--py"></span> Python</div>
+            <h3 class="card__title">DF-80-Converter</h3>
+            <p class="card__desc" data-en="DF-80 format data converter for surveying coordinates." data-zh="DF-80 测绘坐标格式转换工具。">DF-80 format data converter for surveying coordinates.</p>
+            <div class="card__tags"><span class="card__tag">Python</span><span class="card__tag">GIS</span></div>
+            <div class="card__footer"><span class="card__footer-note" data-en="Private repo" data-zh="私有仓库">Private repo</span></div>
+          </div>
+        </div>
+
+        <div class="card fade-up card--hidden">
+          <div class="card__thumb thumb--python"><span class="card__thumb-icon">💰</span></div>
+          <div class="card__body">
+            <div class="card__lang"><span class="card__lang-dot dot--py"></span> Python</div>
+            <h3 class="card__title">Land-Cost</h3>
+            <p class="card__desc" data-en="Land acquisition cost estimation and calculation tool." data-zh="征地成本估算与计算工具。">Land acquisition cost estimation and calculation tool.</p>
+            <div class="card__tags"><span class="card__tag">Python</span><span class="card__tag">GIS</span></div>
+            <div class="card__footer"><span class="card__footer-note" data-en="Private repo" data-zh="私有仓库">Private repo</span></div>
+          </div>
+        </div>
+
+        <div class="card fade-up card--hidden">
+          <div class="card__thumb thumb--python"><span class="card__thumb-icon">📋</span></div>
+          <div class="card__body">
+            <div class="card__lang"><span class="card__lang-dot dot--py"></span> Python</div>
+            <h3 class="card__title">Land-Status-Survey</h3>
+            <p class="card__desc" data-en="Land use status survey data processing." data-zh="土地利用现状调查数据处理工具。">Land use status survey data processing.</p>
+            <div class="card__tags"><span class="card__tag">Python</span><span class="card__tag">GIS</span></div>
+            <div class="card__footer"><span class="card__footer-note" data-en="Private repo" data-zh="私有仓库">Private repo</span></div>
+          </div>
+        </div>
+
+        <div class="card fade-up card--hidden">
+          <div class="card__thumb thumb--python"><span class="card__thumb-icon">📊</span></div>
+          <div class="card__body">
+            <div class="card__lang"><span class="card__lang-dot dot--py"></span> Python</div>
+            <h3 class="card__title">Land-Type-Area-Table</h3>
+            <p class="card__desc" data-en="Land type area table generation and statistics." data-zh="土地类型面积表生成与统计工具。">Land type area table generation and statistics.</p>
+            <div class="card__tags"><span class="card__tag">Python</span><span class="card__tag">GIS</span></div>
+            <div class="card__footer"><span class="card__footer-note" data-en="Private repo" data-zh="私有仓库">Private repo</span></div>
+          </div>
+        </div>
+
+        <div class="card fade-up card--hidden">
+          <div class="card__thumb thumb--python"><span class="card__thumb-icon">🔀</span></div>
+          <div class="card__body">
+            <div class="card__lang"><span class="card__lang-dot dot--py"></span> Python</div>
+            <h3 class="card__title">GT2CAD</h3>
+            <p class="card__desc" data-en="GT format to CAD/DWG conversion tool." data-zh="GT 转 CAD/DWG 格式转换工具。">GT format to CAD/DWG conversion tool.</p>
+            <div class="card__tags"><span class="card__tag">Python</span><span class="card__tag">CAD</span></div>
+            <div class="card__footer"><span class="card__footer-note" data-en="Private repo" data-zh="私有仓库">Private repo</span></div>
+          </div>
+        </div>
+
+        <div class="card fade-up card--hidden">
+          <div class="card__thumb thumb--python"><span class="card__thumb-icon">🖼️</span></div>
+          <div class="card__body">
+            <div class="card__lang"><span class="card__lang-dot dot--py"></span> Python</div>
+            <h3 class="card__title">Announcement-Image</h3>
+            <p class="card__desc" data-en="Automated announcement image generator." data-zh="征地公告图片自动生成工具。">Automated announcement image generator.</p>
+            <div class="card__tags"><span class="card__tag">Python</span><span class="card__tag">GIS</span></div>
+            <div class="card__footer"><span class="card__footer-note" data-en="Private repo" data-zh="私有仓库">Private repo</span></div>
+          </div>
+        </div>
+
+        <div class="card fade-up card--hidden">
+          <div class="card__thumb thumb--python"><span class="card__thumb-icon">📝</span></div>
+          <div class="card__body">
+            <div class="card__lang"><span class="card__lang-dot dot--py"></span> Python</div>
+            <h3 class="card__title">Resettlement-Compensation-Agreement</h3>
+            <p class="card__desc" data-en="Resettlement compensation agreement document generator." data-zh="征地移民补偿协议文档生成工具。">Resettlement compensation agreement document generator.</p>
+            <div class="card__tags"><span class="card__tag">Python</span><span class="card__tag">GIS</span></div>
+            <div class="card__footer"><span class="card__footer-note" data-en="Private repo" data-zh="私有仓库">Private repo</span></div>
+          </div>
+        </div>
+
+        <div class="card fade-up card--hidden">
+          <div class="card__thumb thumb--shell"><span class="card__thumb-icon">🧹</span></div>
+          <div class="card__body">
+            <div class="card__lang"><span class="card__lang-dot dot--sh"></span> Shell</div>
+            <h3 class="card__title">MacDotClean</h3>
+            <p class="card__desc" data-en="macOS hidden file cleaner. One-click recursive cleanup." data-zh="macOS 隐藏文件清理脚本。">macOS hidden file cleaner. One-click recursive cleanup.</p>
+            <div class="card__tags"><span class="card__tag">Shell</span><span class="card__tag">macOS</span><span class="card__tag">Open Source</span></div>
+            <div class="card__footer"><a href="https://github.com/Aaron8938/MacDotClean" target="_blank" rel="noopener">Source</a></div>
+          </div>
+        </div>
+
+      </div>
+      <button class="expand-toggle" data-expand-en="View all 16 utilities" data-expand-zh="查看全部 16 个工具">
+        <span class="expand-toggle__label" data-en="View all 16 utilities" data-zh="查看全部 16 个工具">View all 16 utilities</span>
+        <span class="expand-toggle__arrow">▾</span>
+      </button>
+    </div>
+
+    <!-- Other Projects -->
+    <div class="project-group">
+      <div class="project-group__header">
+        <span class="project-group__label" data-en="More Projects" data-zh="更多项目">More Projects</span>
+        <span class="project-group__badge badge--private">4</span>
+      </div>
+      <div class="project-grid">
+
+        <div class="card fade-up">
+          <div class="card__thumb thumb--kotlin"><span class="card__thumb-icon">🎬</span></div>
+          <div class="card__body">
+            <div class="card__lang"><span class="card__lang-dot dot--kt"></span> Kotlin</div>
+            <h3 class="card__title">AllureReels-Android <span style="font-size:11px;font-weight:500;color:#86868b;">· Android</span></h3>
+            <p class="card__desc" data-en="Android short video app for global markets. Fully self-built, released v1.0.0." data-zh="面向海外市场的 Android 短视频应用。已发布 v1.0.0。">Android short video app for global markets. Fully self-built, released v1.0.0.</p>
+            <div class="card__tags"><span class="card__tag">Kotlin</span><span class="card__tag">ExoPlayer</span><span class="card__tag">MVVM</span></div>
+            <div class="card__footer"><span class="card__footer-note" data-en="Private · Released" data-zh="私有 · 已发布">Private · Released</span></div>
+          </div>
+        </div>
+
+        <div class="card fade-up">
+          <div class="card__thumb thumb--miniapp"><span class="card__thumb-icon">📖</span></div>
+          <div class="card__body">
+            <div class="card__lang"><span class="card__lang-dot dot--mp"></span> TypeScript</div>
+            <h3 class="card__title">AskMe-miniprogram <span style="font-size:11px;font-weight:500;color:#86868b;">· Mini Program</span></h3>
+            <p class="card__desc" data-en="WeChat Mini Program — digital Book of Answers. Skyline engine, minimal and ritualistic." data-zh="微信小程序版答案之书。Skyline 引擎，极简神秘。">WeChat Mini Program — digital Book of Answers. Skyline engine, minimal and ritualistic.</p>
+            <div class="card__tags"><span class="card__tag">Mini Program</span><span class="card__tag">Skyline</span><span class="card__tag">WXML</span></div>
+            <div class="card__footer"><span class="card__footer-note" data-en="Private repo" data-zh="私有仓库">Private repo</span></div>
+          </div>
+        </div>
+
+        <div class="card fade-up">
+          <div class="card__thumb thumb--html"><span class="card__thumb-icon">🌐</span></div>
+          <div class="card__body">
+            <div class="card__lang"><span class="card__lang-dot dot--html"></span> HTML</div>
+            <h3 class="card__title">Aaron8938.github.io <span style="font-size:11px;font-weight:500;color:#86868b;">· Web</span></h3>
+            <p class="card__desc" data-en="You are looking at it. Pure static, zero deps, Apple-inspired." data-zh="你正在看的个人网站。纯静态，零依赖。">You are looking at it. Pure static, zero deps, Apple-inspired.</p>
+            <div class="card__tags"><span class="card__tag">HTML</span><span class="card__tag">CSS</span><span class="card__tag">GitHub Pages</span></div>
+            <div class="card__footer"><a href="https://github.com/Aaron8938/Aaron8938.github.io" target="_blank" rel="noopener">Source</a></div>
+          </div>
+        </div>
+
+        <div class="card fade-up">
+          <div class="card__thumb thumb--engineer"><span class="card__thumb-icon">🗺️</span></div>
+          <div class="card__body">
+            <div class="card__lang"><span class="card__lang-dot dot--py"></span> Python</div>
+            <h3 class="card__title">Taihu-Maps <span style="font-size:11px;font-weight:500;color:#86868b;">· Workflow</span></h3>
+            <p class="card__desc" data-en="Taihu basin map data processing. Serving water conservancy GIS needs." data-zh="太湖流域地图数据处理，服务水利工程 GIS 需求。">Taihu basin map data processing. Serving water conservancy GIS needs.</p>
+            <div class="card__tags"><span class="card__tag">Python</span><span class="card__tag">GIS</span><span class="card__tag">Automation</span></div>
+            <div class="card__footer"><span class="card__footer-note" data-en="Private repo" data-zh="私有仓库">Private repo</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- Back to top -->
-<button class="back-to-top" id="back-to-top" aria-label="回到顶部">
+<section class="section" id="stack">
+  <div class="section__inner">
+    <h2 class="section__title" data-en="Tech Stack" data-zh="技术栈">Tech Stack</h2>
+    <p class="section__subtitle" data-en="Core technologies from real projects. Always expanding." data-zh="在实战中积累的核心技术，持续扩展边界。">Core technologies from real projects. Always expanding.</p>
+    <div class="stack-grid">
+      <div class="stack-card fade-up">
+        <div class="stack-card__icon">📱</div>
+        <h3 data-en="Android" data-zh="Android 开发">Android</h3>
+        <div class="stack-tags">
+          <span class="stack-tag">Kotlin</span><span class="stack-tag">Java</span><span class="stack-tag">Android SDK</span>
+          <span class="stack-tag">ExoPlayer</span><span class="stack-tag">ViewBinding</span><span class="stack-tag">MVVM</span>
+          <span class="stack-tag">Material Design 3</span><span class="stack-tag">Android Studio</span>
+        </div>
+      </div>
+      <div class="stack-card fade-up">
+        <div class="stack-card__icon">🍎</div>
+        <h3 data-en="Apple Platforms" data-zh="Apple 平台">Apple Platforms</h3>
+        <div class="stack-tags">
+          <span class="stack-tag">Swift</span><span class="stack-tag">SwiftUI</span><span class="stack-tag">macOS</span>
+          <span class="stack-tag">iOS</span><span class="stack-tag">watchOS</span><span class="stack-tag">Xcode</span>
+          <span class="stack-tag">Core Data</span><span class="stack-tag">MenuBar App</span>
+        </div>
+      </div>
+      <div class="stack-card fade-up">
+        <div class="stack-card__icon">💬</div>
+        <h3 data-en="Mini Programs" data-zh="微信小程序">Mini Programs</h3>
+        <div class="stack-tags">
+          <span class="stack-tag">WeChat Mini Program</span><span class="stack-tag">Skyline</span>
+          <span class="stack-tag">WXML</span><span class="stack-tag">WXSS</span><span class="stack-tag">WXS</span>
+        </div>
+      </div>
+      <div class="stack-card fade-up">
+        <div class="stack-card__icon">🔧</div>
+        <h3 data-en="Tools & Scripting" data-zh="工具与脚本">Tools & Scripting</h3>
+        <div class="stack-tags">
+          <span class="stack-tag">Python</span><span class="stack-tag">Shell/Bash</span><span class="stack-tag">Git</span>
+          <span class="stack-tag">GitHub</span><span class="stack-tag">macOS</span><span class="stack-tag">Automation</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--alt" id="about">
+  <div class="section__inner">
+    <h2 class="section__title" data-en="About" data-zh="关于我">About</h2>
+    <p class="section__subtitle" data-en="Indie developer. Pragmatist. Good products are polished, not shipped." data-zh="独立开发者，实用主义，好产品是打磨出来的。">Indie developer. Pragmatist. Good products are polished, not shipped.</p>
+    <div class="about-grid">
+      <div class="about-text">
+        <p data-en="I'm Aaron, an indie mobile developer based in Suzhou, China. I work across Android, macOS, iOS, and WeChat Mini Programs, with a side focus on GIS data tooling for water conservancy projects. Core philosophy: practicality above all — if a feature doesn't deliver real value, it's not worth building. Currently iterating on AllureReels, polishing Nudge, exploring SpeedLive & AskMe, and continuously improving the engineering toolchain." data-zh="我是 Aaron，独立移动端开发者，坐标苏州。横跨 Android、macOS、iOS、微信小程序多个生态，同时涉足水利工程领域的 GIS 数据处理工具开发。核心理念是实用至上——对用户没实际价值的功能就不值得做。目前推进 AllureReels 迭代、Nudge 体验打磨、SpeedLive/AskMe 探索，以及工程工具链的持续完善。">I'm Aaron, an indie mobile developer based in Suzhou, China. I work across Android, macOS, iOS, and WeChat Mini Programs, with a side focus on GIS data tooling for water conservancy projects. Core philosophy: practicality above all — if a feature doesn't deliver real value, it's not worth building. Currently iterating on AllureReels, polishing Nudge, exploring SpeedLive & AskMe, and continuously improving the engineering toolchain.</p>
+      </div>
+    </div>
+    <div class="about-contact">
+      <p class="about-contact__label" data-en="Get in touch" data-zh="联系我">Get in touch</p>
+      <div class="contact-links">
+        <a href="https://github.com/Aaron8938" class="contact-link" target="_blank" rel="noopener">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          GitHub
+        </a>
+        <button class="contact-link" id="copy-email">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          893861417@qq.com
+        </button>
+      </div>
+      <div class="contact-hint" id="copy-hint" data-en="Copied to clipboard" data-zh="已复制到剪贴板">Copied to clipboard</div>
+    </div>
+  </div>
+</section>
+
+<button class="back-to-top" id="back-to-top" aria-label="Back to top">
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
 </button>
 
-<!-- Footer -->
-<footer>
-  <div class="footer-links">
+<footer class="footer">
+  <div class="footer__links">
     <a href="https://github.com/Aaron8938" target="_blank" rel="noopener">GitHub</a>
     <a href="mailto:893861417@qq.com">Email</a>
-    <a href="#hero">回到顶部</a>
+    <a href="#hero" data-en="Back to top" data-zh="回到顶部">Back to top</a>
   </div>
-  <div class="footer-meta">
-    <span>&copy; 2026 Aaron</span>
+  <div class="footer__meta">
+    <span>&copy; <time id="footer-year">2026</time> Aaron</span>
     <span class="sep">·</span>
     <span>Built with care</span>
     <span class="sep">·</span>
-    <span>中国苏州</span>
+    <span>Suzhou, China</span>
   </div>
 </footer>
 
-<script>
-// ─── Counter animation for Hero metrics ───
-function animateCounters() {
-  document.querySelectorAll('#hero .grad[data-count]').forEach(el => {
-    const target = parseInt(el.getAttribute('data-count'));
-    const duration = 1200;
-    const startTime = performance.now();
-
-    function update(now) {
-      const elapsed = now - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      // ease-out cubic
-      const eased = 1 - Math.pow(1 - progress, 3);
-      el.textContent = Math.round(eased * target);
-      if (progress < 1) requestAnimationFrame(update);
-    }
-
-    requestAnimationFrame(update);
-  });
-}
-
-// ─── Nav scroll-spy ───
-const nav = document.getElementById('navbar');
-const navLinks = document.querySelectorAll('nav .links a');
-const sections = [...navLinks].map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
-
-function updateActiveNav() {
-  const scrollY = window.scrollY + 120;
-
-  // Nav border on scroll
-  if (window.scrollY > 20) nav.classList.add('scrolled');
-  else nav.classList.remove('scrolled');
-
-  let current = sections[0];
-  for (const section of sections) {
-    if (section.offsetTop <= scrollY) current = section;
-  }
-
-  navLinks.forEach(a => {
-    a.classList.remove('active');
-    if (a.getAttribute('href') === '#' + current.id) a.classList.add('active');
-  });
-}
-
-window.addEventListener('scroll', updateActiveNav, { passive: true });
-updateActiveNav();
-
-// ─── Back to top button ───
-const backToTop = document.getElementById('back-to-top');
-
-function toggleBackToTop() {
-  if (window.scrollY > 500) backToTop.classList.add('visible');
-  else backToTop.classList.remove('visible');
-}
-
-window.addEventListener('scroll', toggleBackToTop, { passive: true });
-
-backToTop.addEventListener('click', () => {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-});
-
-// ─── Email copy to clipboard ───
-const copyBtn = document.getElementById('copy-email');
-const copyHint = document.getElementById('copy-hint');
-
-copyBtn.addEventListener('click', async () => {
-  try {
-    await navigator.clipboard.writeText('893861417@qq.com');
-    copyBtn.classList.add('copied');
-    copyHint.classList.add('visible');
-    setTimeout(() => {
-      copyBtn.classList.remove('copied');
-      copyHint.classList.remove('visible');
-    }, 1800);
-  } catch {
-    // fallback
-    const textarea = document.createElement('textarea');
-    textarea.value = '893861417@qq.com';
-    textarea.style.position = 'fixed'; textarea.style.opacity = '0';
-    document.body.appendChild(textarea);
-    textarea.select();
-    document.execCommand('copy');
-    document.body.removeChild(textarea);
-    copyBtn.classList.add('copied');
-    copyHint.classList.add('visible');
-    setTimeout(() => {
-      copyBtn.classList.remove('copied');
-      copyHint.classList.remove('visible');
-    }, 1800);
-  }
-});
-
-// ─── Intersection Observer for fade-in + counter trigger ───
-let countersTriggered = false;
-
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      // Add delay stagger per element
-      const els = entry.target.querySelectorAll('.fade-in');
-      els.forEach((el, i) => {
-        el.style.transitionDelay = `${i * 0.08}s`;
-        el.classList.add('visible');
-      });
-      // Trigger counter animation once on Hero
-      if (entry.target.id === 'hero' && !countersTriggered) {
-        countersTriggered = true;
-        setTimeout(animateCounters, 200);
-      }
-    }
-  });
-}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-
-// Observe all sections
-document.querySelectorAll('section').forEach(s => observer.observe(s));
-
-// Also observe any standalone fade-in elements
-document.querySelectorAll('.fade-in').forEach(el => {
-  if (!el.closest('section')) observer.observe(el);
-});
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
