@@ -3,10 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aaron Deng — 独立开发者</title>
+<title>Aaron — 独立开发者</title>
+<meta name="description" content="独立移动端开发者，深耕 Android、macOS 和微信小程序。8+ 项目经验，实用至上，少即是多。">
+<meta name="author" content="Aaron">
+
+<!-- Open Graph -->
+<meta property="og:title" content="Aaron — 独立开发者">
+<meta property="og:description" content="独立移动端开发者，深耕 Android、macOS 和微信小程序。实用至上，少即是多。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://aaron8938.github.io">
+<meta property="og:site_name" content="Aaron">
+<meta property="og:locale" content="zh_CN">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Aaron — 独立开发者">
+<meta name="twitter:description" content="独立移动端开发者，深耕 Android、macOS 和微信小程序。">
+
+<!-- Favicon (inline SVG) -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23050508'/><rect width='32' height='32' rx='8' fill='none' stroke='%2367e8f9' stroke-width='1.5'/><text x='16' y='22' text-anchor='middle' font-family='system-ui,sans-serif' font-weight='800' font-size='16' fill='%2367e8f9'>AD</text></svg>">
+
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; scroll-padding-top: 80px; }
   body {
     font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
     background: #050508;
@@ -15,44 +34,71 @@
     overflow-x: hidden;
   }
 
-  /* Background effects */
+  /* ─── Subtle grid background ─── */
+  .bg-grid {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse 70% 70% at 50% 30%, black 20%, transparent 70%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 30%, black 20%, transparent 70%);
+  }
+
+  /* Glow blobs */
   .bg-glow {
     position: fixed; pointer-events: none; z-index: 0;
-    width: 600px; height: 600px; border-radius: 50%;
-    filter: blur(180px); opacity: 0.08;
+    border-radius: 50%; filter: blur(160px);
   }
-  .bg-glow.g1 { top: -200px; left: -100px; background: #67e8f9; }
-  .bg-glow.g2 { bottom: -100px; right: -100px; background: #a78bfa; }
-  .bg-glow.g3 { top: 60%; left: 40%; background: #f472b6; opacity: 0.04; width: 400px; height: 400px; }
+  .bg-glow.g1 { width: 640px; height: 640px; top: -15%; left: -10%; background: #67e8f9; opacity: 0.06; animation: drift1 18s ease-in-out infinite; }
+  .bg-glow.g2 { width: 520px; height: 520px; bottom: -12%; right: -8%; background: #a78bfa; opacity: 0.07; animation: drift2 22s ease-in-out infinite; }
+  .bg-glow.g3 { width: 360px; height: 360px; top: 55%; left: 45%; background: #f472b6; opacity: 0.03; animation: drift3 20s ease-in-out infinite; }
 
-  /* Navigation */
+  @keyframes drift1 { 0%,100%{transform:translate(0,0)} 33%{transform:translate(60px,-30px)} 66%{transform:translate(-20px,50px)} }
+  @keyframes drift2 { 0%,100%{transform:translate(0,0)} 33%{transform:translate(-50px,30px)} 66%{transform:translate(40px,-20px)} }
+  @keyframes drift3 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-30px,-40px)} }
+
+  /* ─── Navigation ─── */
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     padding: 14px 24px;
     backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
     background: rgba(5,5,8,0.75);
     border-bottom: 1px solid rgba(255,255,255,0.05);
+    transition: border-color 0.3s;
   }
+  nav.scrolled { border-bottom-color: rgba(255,255,255,0.12); }
   nav .inner {
     max-width: 1200px; margin: 0 auto;
     display: flex; justify-content: space-between; align-items: center;
   }
   nav .logo {
-    font-weight: 800; font-size: 18px; color: #fff;
+    font-weight: 800; font-size: 18px;
     letter-spacing: 0.04em;
     background: linear-gradient(135deg, #67e8f9, #a78bfa);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     background-clip: text;
   }
   nav .links { display: flex; gap: 32px; }
-  nav .links a { color: #a1a1aa; text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; }
-  nav .links a:hover { color: #fff; }
+  nav .links a {
+    color: #71717a; text-decoration: none; font-size: 14px; font-weight: 500;
+    transition: color 0.25s; position: relative;
+  }
+  nav .links a::after {
+    content: ""; position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%) scaleX(0);
+    width: 18px; height: 2px; border-radius: 2px;
+    background: linear-gradient(90deg, #67e8f9, #a78bfa);
+    transition: transform 0.25s ease;
+  }
+  nav .links a:hover { color: #d4d4d8; }
+  nav .links a.active { color: #fff; }
+  nav .links a.active::after { transform: translateX(-50%) scaleX(1); }
 
-  /* Section containers */
+  /* ─── Section layout ─── */
   section { padding: 100px 24px; position: relative; z-index: 1; }
   .container { max-width: 1200px; margin: 0 auto; }
 
-  /* Section headers */
   .section-header { margin-bottom: 64px; }
   .section-header .overline {
     font-size: 12px; font-weight: 700; text-transform: uppercase;
@@ -61,7 +107,7 @@
   .section-header h2 { font-size: 36px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 12px; }
   .section-header .desc { color: #71717a; font-size: 16px; max-width: 480px; }
 
-  /* Hero */
+  /* ─── Hero ─── */
   #hero { padding-top: 180px; padding-bottom: 100px; min-height: 100dvh; display: flex; align-items: center; }
   #hero .status {
     display: inline-flex; align-items: center; gap: 8px;
@@ -69,11 +115,16 @@
     background: rgba(74,222,128,0.08); color: #4ade80;
     font-size: 13px; font-weight: 500; margin-bottom: 28px;
     border: 1px solid rgba(74,222,128,0.15);
+    animation: statusIn 0.8s ease-out;
   }
   #hero .status .dot { width: 7px; height: 7px; border-radius: 50%; background: #4ade80; animation: pulse 2s infinite; }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.25} }
+  @keyframes statusIn { from { opacity:0; transform:translateY(12px) } to { opacity:1; transform:translateY(0) } }
 
-  #hero h1 { font-size: clamp(44px, 7vw, 76px); font-weight: 800; line-height: 1.08; margin-bottom: 20px; letter-spacing: -0.03em; }
+  #hero h1 {
+    font-size: clamp(44px, 7vw, 76px); font-weight: 800;
+    line-height: 1.08; margin-bottom: 20px; letter-spacing: -0.03em;
+  }
   #hero h1 .accent {
     background: linear-gradient(135deg, #67e8f9 0%, #a78bfa 100%);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
@@ -81,13 +132,16 @@
   }
   #hero .intro { font-size: 19px; color: #a1a1aa; max-width: 560px; margin-bottom: 42px; line-height: 1.7; }
 
+  /* Hero metrics — counter animation */
   #hero .metrics { display: flex; gap: 48px; margin-bottom: 44px; }
   #hero .metric { text-align: center; }
   #hero .metric .num {
     font-size: 40px; font-weight: 800; color: #fff;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.02em; transition: none;
+    font-variant-numeric: tabular-nums;
   }
-  #hero .metric .num span { color: #67e8f9; }
+  #hero .metric .num .grad { color: #67e8f9; }
+  #hero .metric .num .suffix { font-size: 22px; color: #a1a1aa; }
   #hero .metric .label { font-size: 13px; color: #52525b; margin-top: 4px; font-weight: 500; }
 
   #hero .cta-row { display: flex; gap: 14px; flex-wrap: wrap; }
@@ -95,35 +149,28 @@
     display: inline-flex; align-items: center; gap: 8px;
     padding: 12px 26px; border-radius: 12px;
     font-size: 14px; font-weight: 600; text-decoration: none;
-    transition: all 0.25s; cursor: pointer;
+    transition: all 0.25s; cursor: pointer; border: none;
   }
-  .btn-primary {
-    background: #fff; color: #0a0a0b;
-  }
-  .btn-primary:hover { background: #e4e4e7; transform: translateY(-1px); }
-  .btn-secondary {
-    background: rgba(255,255,255,0.06); color: #d4d4d8;
-    border: 1px solid rgba(255,255,255,0.1);
-  }
+  .btn-primary { background: #fff; color: #0a0a0b; }
+  .btn-primary:hover { background: #e4e4e7; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(255,255,255,0.1); }
+  .btn-secondary { background: rgba(255,255,255,0.06); color: #d4d4d8; border: 1px solid rgba(255,255,255,0.1); }
   .btn-secondary:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
 
-  /* Divider between sections */
+  /* ─── Section dividers ─── */
   .section-divider {
     height: 1px; background: linear-gradient(to right, transparent, rgba(255,255,255,0.06), transparent);
     margin: 0 24px;
   }
 
-  /* Projects */
+  /* ─── Projects ─── */
   .project-group { margin-bottom: 72px; }
   .project-group:last-child { margin-bottom: 0; }
   .project-group-label {
-    display: flex; align-items: center; gap: 12px;
-    margin-bottom: 32px;
+    display: flex; align-items: center; gap: 12px; margin-bottom: 32px;
   }
   .project-group-label .icon {
     width: 32px; height: 32px; border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 15px;
+    display: flex; align-items: center; justify-content: center; font-size: 15px;
   }
   .project-group-label .icon.public { background: rgba(74,222,128,0.12); color: #4ade80; }
   .project-group-label .icon.private { background: rgba(161,161,170,0.1); color: #a1a1aa; }
@@ -140,25 +187,40 @@
     gap: 20px;
   }
 
+  /* Project card — enhanced hover */
   .project-card {
+    position: relative;
     background: rgba(255,255,255,0.02);
     border: 1px solid rgba(255,255,255,0.06);
     border-radius: 20px;
     padding: 32px;
-    transition: all 0.35s ease;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+  /* Border glow pseudo-element */
+  .project-card::before {
+    content: ""; position: absolute; inset: -1px; border-radius: 20px; z-index: -1;
+    background: linear-gradient(135deg, rgba(103,232,249,0), rgba(167,139,250,0), rgba(244,114,182,0));
+    opacity: 0; transition: opacity 0.5s ease;
+  }
+  .project-card:hover::before {
+    opacity: 1;
+    background: linear-gradient(135deg, rgba(103,232,249,0.25), rgba(167,139,250,0.25), rgba(244,114,182,0.15));
   }
   .project-card:hover {
-    background: rgba(255,255,255,0.04);
-    border-color: rgba(255,255,255,0.14);
-    transform: translateY(-3px);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    background: rgba(255,255,255,0.05);
+    border-color: rgba(255,255,255,0.18);
+    transform: translateY(-6px);
+    box-shadow: 0 24px 80px -20px rgba(103,232,249,0.08), 0 12px 36px -8px rgba(167,139,250,0.06);
   }
+  .project-card:hover .card-top .lang-icon { transform: scale(1.08); }
   .project-card .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
   .project-card .lang-icon {
     width: 42px; height: 42px; border-radius: 12px;
     display: flex; align-items: center; justify-content: center;
     font-size: 18px; font-weight: 700;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .lang-icon.python { background: rgba(55,118,179,0.18); color: #5ba5e8; }
   .lang-icon.shell { background: rgba(136,224,112,0.15); color: #88e070; }
@@ -192,16 +254,25 @@
   .project-card .card-footer { display: flex; align-items: center; gap: 16px; margin-top: auto; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.04); }
   .project-card .gh-link {
     color: #67e8f9; text-decoration: none; font-size: 13px; font-weight: 600;
-    display: inline-flex; align-items: center; gap: 6px; transition: opacity 0.2s;
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: opacity 0.2s;
+    position: relative;
   }
   .project-card .gh-link:hover { opacity: 0.7; }
+  .project-card .gh-link::after {
+    content: "↗"; display: inline-block; font-size: 11px; margin-left: 2px;
+    transition: transform 0.2s;
+  }
+  .project-card .gh-link:hover::after { transform: translate(2px, -2px); }
 
-  /* Tech Stack */
+  /* ─── Tech Stack ─── */
   #stack .stack-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 24px; }
   .stack-card {
     background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);
     border-radius: 18px; padding: 32px;
+    transition: border-color 0.3s, transform 0.3s;
   }
+  .stack-card:hover { border-color: rgba(255,255,255,0.12); transform: translateY(-2px); }
   .stack-card .stack-icon { font-size: 28px; margin-bottom: 16px; }
   .stack-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 18px; }
   .stack-tags { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -213,97 +284,154 @@
   }
   .stack-tag:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.16); }
 
-  /* About */
+  /* ─── About ─── */
   #about { background: rgba(255,255,255,0.01); }
   .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
-  .about-text p { color: #a1a1aa; font-size: 15px; line-height: 1.8; margin-bottom: 20px; }
+  .about-text p { color: #a1a1aa; font-size: 15px; line-height: 1.9; margin-bottom: 24px; }
+  .about-text p strong { color: #d4d4d8; }
   .about-highlights { display: flex; flex-direction: column; gap: 12px; }
   .highlight-row {
     display: flex; align-items: center; gap: 16px;
     padding: 18px 20px; border-radius: 12px;
     background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);
+    transition: border-color 0.3s, background 0.3s;
   }
+  .highlight-row:hover { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.1); }
   .highlight-row .hl-icon { font-size: 22px; flex-shrink: 0; }
   .highlight-row .hl-text strong { display: block; font-size: 14px; margin-bottom: 2px; }
   .highlight-row .hl-text span { font-size: 13px; color: #71717a; }
 
-  /* Contact */
-  #contact { text-align: center; padding-bottom: 80px; }
-  #contact .contact-links { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-top: 48px; }
+  /* ─── Contact ─── */
+  #contact { text-align: center; padding-bottom: 60px; }
+  #contact .contact-links { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-top: 48px; margin-bottom: 28px; }
   .contact-link {
     display: inline-flex; align-items: center; gap: 10px;
     padding: 14px 28px; border-radius: 14px;
     background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
     color: #d4d4d8; text-decoration: none; font-size: 15px; font-weight: 500;
-    transition: all 0.25s;
+    transition: all 0.25s; cursor: pointer;
   }
   .contact-link:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.18); color: #fff; transform: translateY(-1px); }
+  .contact-link.copied { border-color: #4ade80; background: rgba(74,222,128,0.08); }
+  .contact-hint { color: #3f3f46; font-size: 12px; margin-top: 4px; opacity: 0; transition: opacity 0.3s; }
+  .contact-hint.visible { opacity: 1; }
 
-  /* Footer */
-  footer {
-    text-align: center; padding: 32px; color: #3f3f46; font-size: 13px;
-    border-top: 1px solid rgba(255,255,255,0.03);
+  /* ─── Back to top ─── */
+  .back-to-top {
+    position: fixed; bottom: 32px; right: 32px; z-index: 90;
+    width: 44px; height: 44px; border-radius: 14px;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; opacity: 0; visibility: hidden;
+    transform: translateY(12px);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    color: #a1a1aa;
+  }
+  .back-to-top.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+  .back-to-top:hover {
+    background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2);
+    color: #fff; transform: translateY(-2px);
   }
 
-  /* Animations */
+  /* ─── Footer ─── */
+  footer {
+    position: relative; z-index: 1;
+    text-align: center; padding: 40px 24px 32px;
+    color: #52525b; font-size: 13px;
+    border-top: 1px solid rgba(255,255,255,0.03);
+  }
+  footer .footer-links { display: flex; justify-content: center; gap: 24px; margin-bottom: 16px; flex-wrap: wrap; }
+  footer .footer-links a {
+    color: #71717a; text-decoration: none; font-size: 13px; font-weight: 500;
+    transition: color 0.2s;
+  }
+  footer .footer-links a:hover { color: #d4d4d8; }
+  footer .footer-meta { display: flex; justify-content: center; gap: 8px; align-items: center; flex-wrap: wrap; }
+  footer .footer-meta span { color: #3f3f46; }
+  footer .footer-meta .sep { color: #27272a; }
+
+  /* ─── Scroll animations ─── */
   .fade-in {
     opacity: 0; transform: translateY(28px);
     transition: opacity 0.7s ease, transform 0.7s ease;
   }
   .fade-in.visible { opacity: 1; transform: translateY(0); }
 
-  /* Responsive */
+  /* ─── Responsive ─── */
   @media (max-width: 768px) {
     #hero { padding-top: 130px; min-height: auto; }
-    #hero .metrics { gap: 32px; }
+    #hero .metrics { gap: 28px; }
+    #hero .metric .num { font-size: 32px; }
+    #hero .metric .num .suffix { font-size: 18px; }
     .projects-grid { grid-template-columns: 1fr; }
     .about-grid { grid-template-columns: 1fr; }
     .stack-grid { grid-template-columns: 1fr; }
-    nav .links { gap: 18px; font-size: 13px; }
+    nav .links { gap: 18px; }
     section { padding: 64px 16px; }
+    .back-to-top { bottom: 20px; right: 20px; width: 40px; height: 40px; border-radius: 12px; }
+    footer .footer-links { gap: 14px; }
   }
 </style>
 </head>
 <body>
 
+<!-- Background layers -->
+<div class="bg-grid"></div>
 <div class="bg-glow g1"></div>
 <div class="bg-glow g2"></div>
 <div class="bg-glow g3"></div>
 
-<nav>
+<!-- Navigation -->
+<nav id="navbar">
   <div class="inner">
     <div class="logo">AD</div>
     <div class="links">
-      <a href="#projects">项目</a>
-      <a href="#stack">技术栈</a>
-      <a href="#about">关于</a>
-      <a href="#contact">联系</a>
+      <a href="#hero" data-section="hero">首页</a>
+      <a href="#projects" data-section="projects">项目</a>
+      <a href="#stack" data-section="stack">技术栈</a>
+      <a href="#about" data-section="about">关于</a>
+      <a href="#contact" data-section="contact">联系</a>
     </div>
   </div>
 </nav>
 
+<!-- Hero -->
 <section id="hero">
   <div class="container">
     <div class="status"><div class="dot"></div> 开放合作机会</div>
-    <h1>Hi，我是 <span class="accent">Aaron Deng</span></h1>
+    <h1>Hi，我是 <span class="accent">Aaron</span></h1>
     <p class="intro">
       独立移动端开发者，深耕 Android、macOS 和微信小程序。相信好产品是打磨出来的 —— 从需求到代码，从交互到细节，每个项目都当自己的作品来对待。
     </p>
     <div class="metrics">
-      <div class="metric"><div class="num"><span>8</span>+</div><div class="label">项目经验</div></div>
-      <div class="metric"><div class="num"><span>4</span></div><div class="label">覆盖平台</div></div>
-      <div class="metric"><div class="num"><span>5</span></div><div class="label">开发语言</div></div>
-      <div class="metric"><div class="num"><span>3</span>年<span>+</span></div><div class="label">开发经验</div></div>
+      <div class="metric">
+        <div class="num"><span class="grad" data-count="8">0</span><span class="suffix">+</span></div>
+        <div class="label">项目经验</div>
+      </div>
+      <div class="metric">
+        <div class="num"><span class="grad" data-count="4">0</span></div>
+        <div class="label">覆盖平台</div>
+      </div>
+      <div class="metric">
+        <div class="num"><span class="grad" data-count="5">0</span></div>
+        <div class="label">开发语言</div>
+      </div>
+      <div class="metric">
+        <div class="num"><span class="grad" data-count="3">0</span><span class="suffix">年+</span></div>
+        <div class="label">开发经验</div>
+      </div>
     </div>
     <div class="cta-row">
       <a href="#projects" class="btn btn-primary">浏览作品</a>
-      <a href="https://github.com/Aaron8938" class="btn btn-secondary" target="_blank">GitHub</a>
+      <a href="https://github.com/Aaron8938" class="btn btn-secondary" target="_blank" rel="noopener">GitHub</a>
     </div>
   </div>
 </section>
 
 <div class="section-divider"></div>
 
+<!-- Projects -->
 <section id="projects">
   <div class="container">
     <div class="section-header">
@@ -312,7 +440,7 @@
       <p class="desc">从移动应用到工具脚本，每个项目解决一个具体问题。</p>
     </div>
 
-    <!-- ===== 公开项目 ===== -->
+    <!-- 公开项目 -->
     <div class="project-group">
       <div class="project-group-label">
         <div class="icon public">&#9679;</div>
@@ -328,9 +456,7 @@
             <span class="repo-badge">Public</span>
           </div>
           <h3>Office-to-PDF</h3>
-          <p class="desc">
-            批量 Office 文档转 PDF 命令行工具。解决日常办公中大量 Word、Excel、PowerPoint 文件需要统一归档为 PDF 的痛点，自动化完成格式转换，无需手动逐个打开另存。
-          </p>
+          <p class="desc">批量 Office 文档转 PDF 命令行工具。解决日常办公中大量 Word、Excel、PowerPoint 文件需要统一归档为 PDF 的痛点。</p>
           <div class="features">
             <div class="ft">支持 .docx / .xlsx / .pptx 三种主流格式</div>
             <div class="ft">批量处理整个目录，自动识别文件类型</div>
@@ -342,20 +468,18 @@
             <span class="tech-tag">openpyxl</span>
           </div>
           <div class="card-footer">
-            <a href="https://github.com/Aaron8938/Office-to-PDF" class="gh-link" target="_blank">查看源码 →</a>
+            <a href="https://github.com/Aaron8938/Office-to-PDF" class="gh-link" target="_blank" rel="noopener">查看源码</a>
           </div>
         </div>
 
-        <!-- PDF-Auto-Scale-to-A4 -->
+        <!-- PDF-Auto-Scale -->
         <div class="project-card fade-in">
           <div class="card-top">
             <div class="lang-icon python">Py</div>
             <span class="repo-badge">Public</span>
           </div>
           <h3>PDF-Auto-Scale-to-A4</h3>
-          <p class="desc">
-            PDF 页面自动缩放到 A4 尺寸的批处理工具。针对非标准尺寸 PDF 打印变形问题，自动检测原始页面比例，等比缩放后居中放置在 A4 画布上，完美适配办公打印和电子归档。
-          </p>
+          <p class="desc">PDF 页面自动缩放到 A4 尺寸的批处理工具。自动检测原始页面比例，等比缩放后居中放置在 A4 画布上，完美适配打印和归档。</p>
           <div class="features">
             <div class="ft">智能等比缩放，不拉伸不变形</div>
             <div class="ft">自动居中放置 + 白边填充</div>
@@ -367,7 +491,7 @@
             <span class="tech-tag">reportlab</span>
           </div>
           <div class="card-footer">
-            <a href="https://github.com/Aaron8938/PDF-Auto-Scale-to-A4" class="gh-link" target="_blank">查看源码 →</a>
+            <a href="https://github.com/Aaron8938/PDF-Auto-Scale-to-A4" class="gh-link" target="_blank" rel="noopener">查看源码</a>
           </div>
         </div>
 
@@ -378,9 +502,7 @@
             <span class="repo-badge">Public</span>
           </div>
           <h3>PDF-Signature-Page-Processing</h3>
-          <p class="desc">
-            PDF 签名页提取与处理工具。自动识别合同/协议中的签名页面，支持分离、提取、归档等操作，大幅简化合同审核流程中的签名页管理工作。
-          </p>
+          <p class="desc">PDF 签名页提取与处理工具。自动识别合同/协议中的签名页面，支持分离、提取、归档等操作，大幅简化合同审核流程。</p>
           <div class="features">
             <div class="ft">自动识别签名特征区域</div>
             <div class="ft">支持分离和合并两种输出模式</div>
@@ -392,7 +514,7 @@
             <span class="tech-tag">PDF 解析</span>
           </div>
           <div class="card-footer">
-            <a href="https://github.com/Aaron8938/PDF-Signature-Page-Processing" class="gh-link" target="_blank">查看源码 →</a>
+            <a href="https://github.com/Aaron8938/PDF-Signature-Page-Processing" class="gh-link" target="_blank" rel="noopener">查看源码</a>
           </div>
         </div>
 
@@ -403,9 +525,7 @@
             <span class="repo-badge">Public</span>
           </div>
           <h3>MacDotClean</h3>
-          <p class="desc">
-            macOS 隐藏文件清理脚本。一键递归清理指定目录下所有 .DS_Store、._* 等系统自动生成的隐藏文件，保持项目目录和移动硬盘的整洁干净。
-          </p>
+          <p class="desc">macOS 隐藏文件清理脚本。一键递归清理指定目录下所有 .DS_Store、._* 等系统隐藏文件，保持项目目录整洁。</p>
           <div class="features">
             <div class="ft">递归扫描，深度清理所有子目录</div>
             <div class="ft">支持自定义清理规则</div>
@@ -417,14 +537,14 @@
             <span class="tech-tag">macOS</span>
           </div>
           <div class="card-footer">
-            <a href="https://github.com/Aaron8938/MacDotClean" class="gh-link" target="_blank">查看源码 →</a>
+            <a href="https://github.com/Aaron8938/MacDotClean" class="gh-link" target="_blank" rel="noopener">查看源码</a>
           </div>
         </div>
 
       </div>
     </div>
 
-    <!-- ===== 私有项目 ===== -->
+    <!-- 私有项目 -->
     <div class="project-group">
       <div class="project-group-label">
         <div class="icon private">&#9679;</div>
@@ -440,13 +560,11 @@
             <span class="repo-badge">Private</span>
           </div>
           <h3>AllureReels</h3>
-          <p class="desc">
-            面向海外市场的 Android 短视频应用，产品定位对标 TikTok Reels。从播放器选型到交互手势，全链路自主开发。已发布 v1.0.0 正式版本，具备完整的产品闭环能力。
-          </p>
+          <p class="desc">面向海外市场的 Android 短视频应用，对标 TikTok Reels。全链路自主开发，已发布 v1.0.0 正式版本，具备完整的产品闭环能力。</p>
           <div class="features">
-            <div class="ft">ExoPlayer 引擎驱动，支持自适应码率、无缝循环播放</div>
+            <div class="ft">ExoPlayer 引擎驱动，自适应码率、无缝循环播放</div>
             <div class="ft">4 标签页底部导航：首页推荐 / 发现 / 创作 / 个人中心</div>
-            <div class="ft">视频收藏与离线下载（本地缓存策略）</div>
+            <div class="ft">视频收藏与离线下载</div>
             <div class="ft">Material Design 3 设计语言，支持深色模式</div>
           </div>
           <div class="tech-tags">
@@ -468,9 +586,7 @@
             <span class="repo-badge">Private</span>
           </div>
           <h3>Nudge</h3>
-          <p class="desc">
-            极致轻量的 macOS 菜单栏微习惯追踪应用。经历了从 iOS/macOS 双平台复杂版到纯 macOS 精简版的重大重构 —— 文件从 14 个减至 8 个，代码从 2100 行砍到 1088 行。设计哲学：不打扰，只提醒。
-          </p>
+          <p class="desc">极致轻量的 macOS 菜单栏微习惯追踪应用。经历重大重构 —— 文件从 14 个减至 8 个，代码从 2100 行砍到 1088 行。设计哲学：不打扰，只提醒。</p>
           <div class="features">
             <div class="ft">驻留菜单栏，零界面干扰，LSUIElement=true</div>
             <div class="ft">Habit + ActivityLog 纯数据模型，无冗余字段</div>
@@ -496,13 +612,11 @@
             <span class="repo-badge">Private</span>
           </div>
           <h3>SpeedLive</h3>
-          <p class="desc">
-            与 AllureReels 差异化定位的实时互动项目，探索短视频消费之外的实时连线场景。目前处于核心架构搭建阶段，关注低延迟推流和实时交互体验。
-          </p>
+          <p class="desc">与 AllureReels 差异化定位的实时互动项目，探索短视频消费之外的实时连线场景。目前处于核心架构搭建阶段。</p>
           <div class="features">
             <div class="ft">实时音视频传输管线搭建中</div>
             <div class="ft">与 AllureReels 技术栈共享，模块化可复用</div>
-            <div class="ft">差异化产品方向：实时互动 vs 异步消费</div>
+            <div class="ft">差异化方向：实时互动 vs 异步消费</div>
           </div>
           <div class="tech-tags">
             <span class="tech-tag">Kotlin</span>
@@ -521,9 +635,7 @@
             <span class="repo-badge">Private</span>
           </div>
           <h3>AskMe · 答案之书</h3>
-          <p class="desc">
-            微信小程序版「答案之书」—— 用户输入问题，获得一句随机哲思式回答。基于 WeChat Skyline 新一代渲染引擎开发，追求极致的首屏加载和交互动画流畅度。
-          </p>
+          <p class="desc">微信小程序版「答案之书」—— 用户输入问题，获得一句随机哲思式回答。基于 Skyline 新一代渲染引擎开发，追求极致的首屏加载和动效流畅度。</p>
           <div class="features">
             <div class="ft">Skyline 渲染引擎，突破 WebView 性能瓶颈</div>
             <div class="ft">拟物翻书动效，触感反馈增强代入感</div>
@@ -548,6 +660,7 @@
 
 <div class="section-divider"></div>
 
+<!-- Tech Stack -->
 <section id="stack">
   <div class="container">
     <div class="section-header">
@@ -618,6 +731,7 @@
 
 <div class="section-divider"></div>
 
+<!-- About -->
 <section id="about">
   <div class="container">
     <div class="section-header">
@@ -627,7 +741,7 @@
     <div class="about-grid">
       <div class="about-text">
         <p>
-          我是 Aaron，一名独立移动端开发者，坐标苏州。从大学时期开始接触移动开发，到现在横跨 Android、macOS 和微信小程序三个生态。
+          我是 Aaron，一名独立移动端开发者，坐标苏州。从大学时期开始接触移动开发，到现在横跨 <strong>Android、macOS 和微信小程序</strong>三个生态。
         </p>
         <p>
           我做产品的核心标准只有一个：<strong>实用性</strong>。一个功能再好，如果对用户没有实际价值，就不值得做。这也是为什么 Nudge 能从 2100 行重构到 1088 行 —— 砍掉所有不必要的东西，只留本质。
@@ -660,6 +774,7 @@
 
 <div class="section-divider"></div>
 
+<!-- Contact -->
 <section id="contact">
   <div class="container">
     <div class="section-header" style="text-align:center;">
@@ -668,37 +783,160 @@
       <p class="desc" style="margin:0 auto;">对项目感兴趣？想合作？欢迎随时交流。</p>
     </div>
     <div class="contact-links">
-      <a href="https://github.com/Aaron8938" class="contact-link" target="_blank">
+      <a href="https://github.com/Aaron8938" class="contact-link" target="_blank" rel="noopener">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
         GitHub
       </a>
-      <a href="mailto:893861417@qq.com" class="contact-link">
+      <button class="contact-link" id="copy-email" title="点击复制邮箱">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-        Email
-      </a>
+        893861417@qq.com
+      </button>
     </div>
+    <div class="contact-hint" id="copy-hint">已复制到剪贴板</div>
   </div>
 </section>
 
+<!-- Back to top -->
+<button class="back-to-top" id="back-to-top" aria-label="回到顶部">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+</button>
+
+<!-- Footer -->
 <footer>
-  &copy; 2026 Aaron Deng. Built with care.
+  <div class="footer-links">
+    <a href="https://github.com/Aaron8938" target="_blank" rel="noopener">GitHub</a>
+    <a href="mailto:893861417@qq.com">Email</a>
+    <a href="#hero">回到顶部</a>
+  </div>
+  <div class="footer-meta">
+    <span>&copy; 2026 Aaron</span>
+    <span class="sep">·</span>
+    <span>Built with care</span>
+    <span class="sep">·</span>
+    <span>中国苏州</span>
+  </div>
 </footer>
 
 <script>
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-      }
-    });
-  }, { threshold: 0.1 });
+// ─── Counter animation for Hero metrics ───
+function animateCounters() {
+  document.querySelectorAll('#hero .grad[data-count]').forEach(el => {
+    const target = parseInt(el.getAttribute('data-count'));
+    const duration = 1200;
+    const startTime = performance.now();
 
-  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    function update(now) {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // ease-out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.round(eased * target);
+      if (progress < 1) requestAnimationFrame(update);
+    }
 
-  // Stagger animation delay for project cards
-  document.querySelectorAll('.projects-grid .fade-in').forEach((el, i) => {
-    el.style.transitionDelay = `${i * 0.06}s`;
+    requestAnimationFrame(update);
   });
+}
+
+// ─── Nav scroll-spy ───
+const nav = document.getElementById('navbar');
+const navLinks = document.querySelectorAll('nav .links a');
+const sections = [...navLinks].map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+
+function updateActiveNav() {
+  const scrollY = window.scrollY + 120;
+
+  // Nav border on scroll
+  if (window.scrollY > 20) nav.classList.add('scrolled');
+  else nav.classList.remove('scrolled');
+
+  let current = sections[0];
+  for (const section of sections) {
+    if (section.offsetTop <= scrollY) current = section;
+  }
+
+  navLinks.forEach(a => {
+    a.classList.remove('active');
+    if (a.getAttribute('href') === '#' + current.id) a.classList.add('active');
+  });
+}
+
+window.addEventListener('scroll', updateActiveNav, { passive: true });
+updateActiveNav();
+
+// ─── Back to top button ───
+const backToTop = document.getElementById('back-to-top');
+
+function toggleBackToTop() {
+  if (window.scrollY > 500) backToTop.classList.add('visible');
+  else backToTop.classList.remove('visible');
+}
+
+window.addEventListener('scroll', toggleBackToTop, { passive: true });
+
+backToTop.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// ─── Email copy to clipboard ───
+const copyBtn = document.getElementById('copy-email');
+const copyHint = document.getElementById('copy-hint');
+
+copyBtn.addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText('893861417@qq.com');
+    copyBtn.classList.add('copied');
+    copyHint.classList.add('visible');
+    setTimeout(() => {
+      copyBtn.classList.remove('copied');
+      copyHint.classList.remove('visible');
+    }, 1800);
+  } catch {
+    // fallback
+    const textarea = document.createElement('textarea');
+    textarea.value = '893861417@qq.com';
+    textarea.style.position = 'fixed'; textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    copyBtn.classList.add('copied');
+    copyHint.classList.add('visible');
+    setTimeout(() => {
+      copyBtn.classList.remove('copied');
+      copyHint.classList.remove('visible');
+    }, 1800);
+  }
+});
+
+// ─── Intersection Observer for fade-in + counter trigger ───
+let countersTriggered = false;
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      // Add delay stagger per element
+      const els = entry.target.querySelectorAll('.fade-in');
+      els.forEach((el, i) => {
+        el.style.transitionDelay = `${i * 0.08}s`;
+        el.classList.add('visible');
+      });
+      // Trigger counter animation once on Hero
+      if (entry.target.id === 'hero' && !countersTriggered) {
+        countersTriggered = true;
+        setTimeout(animateCounters, 200);
+      }
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+// Observe all sections
+document.querySelectorAll('section').forEach(s => observer.observe(s));
+
+// Also observe any standalone fade-in elements
+document.querySelectorAll('.fade-in').forEach(el => {
+  if (!el.closest('section')) observer.observe(el);
+});
 </script>
 
 </body>
